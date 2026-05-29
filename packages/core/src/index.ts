@@ -7,7 +7,6 @@ export * from "./api/taskModule";
 // Engines
 export * from "./engines/drt";
 export * from "./engines/staircase";
-export * from "./engines/stimulusInjector";
 export * from "./engines/parameterTransforms";
 
 // Infrastructure
