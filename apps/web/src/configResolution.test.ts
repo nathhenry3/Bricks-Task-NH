@@ -4,18 +4,18 @@ import { buildConfigReferenceCandidates, toBundledConfigKey, toConfigFetchPath }
 describe("configResolution", () => {
   it("resolves bare config names to task-scoped then raw fallback", () => {
     const candidates = buildConfigReferenceCandidates({
-      requestedConfig: "annikaHons",
-      taskId: "nback",
+      requestedConfig: "spotlight",
+      taskId: "bricks",
     });
-    expect(candidates).toEqual(["nback/annikaHons", "annikaHons"]);
+    expect(candidates).toEqual(["bricks/spotlight", "spotlight"]);
   });
 
   it("resolves unknown bare names to task-scoped then raw fallback", () => {
     const candidates = buildConfigReferenceCandidates({
       requestedConfig: "pilotA",
-      taskId: "stroop",
+      taskId: "bricks",
     });
-    expect(candidates).toEqual(["stroop/pilotA", "pilotA"]);
+    expect(candidates).toEqual(["bricks/pilotA", "pilotA"]);
   });
 
   it("keeps path-like references as-is", () => {
@@ -27,14 +27,14 @@ describe("configResolution", () => {
   });
 
   it("normalizes bundled config keys from .json and configs prefixes", () => {
-    expect(toBundledConfigKey("nback/default")).toBe("nback/default");
-    expect(toBundledConfigKey("nback/default.json")).toBe("nback/default");
-    expect(toBundledConfigKey("/configs/nback/default.json")).toBe("nback/default");
-    expect(toBundledConfigKey("configs/nback/default")).toBe("nback/default");
+    expect(toBundledConfigKey("bricks/default")).toBe("bricks/default");
+    expect(toBundledConfigKey("bricks/default.json")).toBe("bricks/default");
+    expect(toBundledConfigKey("/configs/bricks/default.json")).toBe("bricks/default");
+    expect(toBundledConfigKey("configs/bricks/default")).toBe("bricks/default");
   });
 
   it("builds fetch paths for logical config names", () => {
-    expect(toConfigFetchPath("nback/default")).toBe("/configs/nback/default.json");
+    expect(toConfigFetchPath("bricks/default")).toBe("/configs/bricks/default.json");
     expect(toConfigFetchPath("/custom/file.json")).toBe("/custom/file.json");
   });
 });

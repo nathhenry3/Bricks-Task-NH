@@ -1,7 +1,74 @@
 import type { TaskModule, TaskModuleHandle, TaskModuleAddress, TaskModuleContext } from "../api/taskModule";
-import { generateProspectiveMemoryPositions, type ProspectiveMemoryScheduleConfig } from "./prospectiveMemory";
+import type { SeededRandom } from "../infrastructure/random";
 import { coercePoolDrawConfig, createCategoryPoolDrawer, createPoolDrawer, type CategoryDrawMode, type PoolDrawConfig } from "../infrastructure/pools";
 import { asObject, asString } from "../utils/coerce";
+
+export interface ProspectiveMemoryScheduleConfig {
+  count: number;
+  minSeparation: number;
+  maxSeparation: number;
+}
+
+function generateProspectiveMemoryPositions(
+  rng: SeededRandom,
+  nTrials: number,
+  schedule: ProspectiveMemoryScheduleConfig,
+  eligibleIndices?: Set<number>,
+): number[] {
+  const nPm = Math.max(0, Math.floor(schedule.count));
+  const minSep = Math.max(1, Math.floor(schedule.minSeparation));
+  const maxSep = Math.max(minSep, Math.floor(schedule.maxSeparation));
+  if (nPm <= 0) return [];
+
+  const failedStates = new Set<string>();
+
+  const search = (step: number, lastPos: number): number[] | null => {
+    if (step >= nPm) return [];
+    const stateKey = `${step}|${lastPos}`;
+    if (failedStates.has(stateKey)) return null;
+
+    const remaining = nPm - step - 1;
+    const minPos = lastPos + minSep;
+    const latestByMaxGap = lastPos + maxSep;
+    const latestByRemaining = nTrials - 1 - remaining * minSep;
+    const maxPos = Math.min(latestByMaxGap, latestByRemaining);
+
+    if (minPos > maxPos) {
+      failedStates.add(stateKey);
+      return null;
+    }
+
+    const possiblePos: number[] = [];
+    for (let p = minPos; p <= maxPos; p += 1) {
+      if (!eligibleIndices || eligibleIndices.has(p)) {
+        possiblePos.push(p);
+      }
+    }
+    if (possiblePos.length === 0) {
+      failedStates.add(stateKey);
+      return null;
+    }
+
+    rng.shuffle(possiblePos);
+    for (const pos of possiblePos) {
+      const remainder = search(step + 1, pos);
+      if (remainder) {
+        return [pos, ...remainder];
+      }
+    }
+
+    failedStates.add(stateKey);
+    return null;
+  };
+
+  const placements = search(0, 0);
+  if (!placements) {
+    throw new Error(
+      `Cannot place injection trials: spacing/eligibility constraints impossible (count=${nPm}, minSep=${minSep}, maxSep=${maxSep}, nTrials=${nTrials}).`,
+    );
+  }
+  return placements;
+}
 
 export interface StimulusInjectionCategorySource {
   type: "category_in";

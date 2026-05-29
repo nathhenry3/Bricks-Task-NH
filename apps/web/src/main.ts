@@ -19,20 +19,7 @@ import {
 } from "@experiments/core";
 import type { CoreConfig, JSONObject, TaskAdapter } from "@experiments/core";
 
-import { sftAdapter } from "@experiments/task-sft";
-import { nbackAdapter } from "@experiments/task-nback";
 import { bricksAdapter } from "@experiments/task-bricks";
-import { stroopAdapter } from "@experiments/task-stroop";
-import { trackingAdapter } from "@experiments/task-tracking";
-import { rdkAdapter } from "@experiments/task-rdk";
-import { changeDetectionAdapter } from "@experiments/task-change-detection";
-import { flankerAdapter } from "@experiments/task-flanker";
-import { goNoGoAdapter } from "@experiments/task-go-no-go";
-import { matbTrackingAdapter } from "@experiments/task-matb-tracking";
-import { matbSysmonAdapter } from "@experiments/task-matb-sysmon";
-import { matbResmanAdapter } from "@experiments/task-matb-resman";
-import { matbCommsAdapter } from "@experiments/task-matb-comms";
-import { matbAdapter } from "@experiments/task-matb";
 
 import { coreDefaultConfig } from "./appCoreConfig";
 import { taskConfigsByPath } from "./taskVariantConfigs";
@@ -46,20 +33,7 @@ async function bootstrap(): Promise<void> {
 
   const configManager = new ConfigurationManager();
   const adapters: TaskAdapter[] = [
-    sftAdapter,
-    nbackAdapter,
     bricksAdapter,
-    stroopAdapter,
-    trackingAdapter,
-    rdkAdapter,
-    changeDetectionAdapter,
-    flankerAdapter,
-    goNoGoAdapter,
-    matbTrackingAdapter,
-    matbSysmonAdapter,
-    matbResmanAdapter,
-    matbCommsAdapter,
-    matbAdapter,
   ];
   const adapterMap = buildTaskMap(adapters);
 
