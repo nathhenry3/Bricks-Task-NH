@@ -1,0 +1,42 @@
+{
+  "task": {
+    "title": "Change Detection Default"
+  },
+  "mapping": {
+    "changeKey": "s",
+    "noChangeKey": "d"
+  },
+  "timing": {
+    "fixationMs": 500,
+    "encodingMs": 1000,
+    "delayMs": 1000,
+    "probeMs": 3000,
+    "trialDurationMs": 6000
+  },
+  "stimulus": {
+    "slotCount": 4,
+    "layout": {
+      "type": "circular",
+      "radius": 200,
+      "padding": 20
+    },
+    "items": {
+      "type": "shape",
+      "shapes": ["circle", "square"],
+      "colors": ["red", "blue", "green", "yellow", "black"]
+    }
+  },
+  "plan": {
+    "blocks": [
+      {
+        "trials": 4,
+        "changeProbability": 0.5,
+        "setSizes": [4, 6]
+      }
+    ]
+  },
+  "feedback": {
+    "enabled": true,
+    "durationMs": 1000
+  }
+}

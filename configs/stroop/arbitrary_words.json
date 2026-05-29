@@ -1,0 +1,94 @@
+{
+  "task": {
+    "implementation": "jspsych_stroop",
+    "runner": "jspsych",
+    "title": "Stroop - Arbitrary Word Pool",
+    "instructions": "Respond to the ink color only.",
+    "rtTask": {
+      "timing": {
+        "trialDurationMs": 2200,
+        "fixationOnsetMs": 0,
+        "fixationDurationMs": 600,
+        "stimulusOnsetMs": 800,
+        "stimulusDurationMs": 1400,
+        "responseWindowStartMs": 800,
+        "responseWindowEndMs": 1900
+      },
+      "responseTerminatesTrial": false,
+      "postResponseContent": "blank",
+      "feedbackPhase": "post_response"
+    }
+  },
+  "mapping": {
+    "redKey": "f",
+    "greenKey": "j"
+  },
+  "display": {
+    "aperturePx": 440,
+    "frameBackground": "#ffffff",
+    "frameBorder": "2px solid #d1d5db",
+    "fixationColor": "#111827",
+    "stimulusFontSizePx": 56,
+    "stimulusFontWeight": 700,
+    "textColorByToken": {
+      "red": "#ff0000",
+      "green": "#00aa00"
+    }
+  },
+  "stimuli": {
+    "responseColorTokens": ["red", "green"],
+    "words": [
+      "red",
+      "green",
+      "blue",
+      "table",
+      "window",
+      "cloud",
+      "music",
+      "paper",
+      "river",
+      "stone",
+      "forest",
+      "clock"
+    ],
+    "colorLexicon": {
+      "map": {
+        "red": "red",
+        "green": "green",
+        "scarlet": "red",
+        "emerald": "green"
+      }
+    }
+  },
+  "conditions": {
+    "mode": "congruence",
+    "quotaPerBlock": {
+      "congruent": 10,
+      "incongruent": 10,
+      "neutral": 10
+    },
+    "fontColorQuotaPerBlock": {
+      "red": 15,
+      "green": 15
+    },
+    "maxConditionRunLength": 3,
+    "noImmediateWordRepeat": true
+  },
+  "plan": {
+    "blockCount": 2,
+    "blockTemplate": {
+      "label": "Block {blockIndex}",
+      "trials": 30,
+      "feedback": {
+        "enabled": true,
+        "durationMs": 350,
+        "messages": {
+          "correct": "OK",
+          "incorrect": "Wrong",
+          "timeout": "Too slow",
+          "invalid": "Invalid"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "_comment": "Parasuraman et al. (1993) two-block reliability manipulation with concurrent border DRT.",
+  "_comment2": "Block 1 = high reliability (most failures auto-resolve). Block 2 = low reliability (fewer auto-resolutions). A NASA-TLX survey runs once at the end. DRT uses a red border around the MATB display area; respond with Space.",
+  "ui": {
+    "pageBackground": "#0a0a0a",
+    "cardWidth": "800px",
+    "cardMinHeight": "600px",
+    "cardBackground": "#1a1a1a",
+    "cardBorder": "1px solid #444444",
+    "cardBorderRadius": "0px",
+    "cardColor": "#cccccc",
+    "cardFontSize": "1rem",
+    "cardFontFamily": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    "continueButtonStyle": {
+      "background": "#222222",
+      "border": "1px solid #444444",
+      "borderRadius": "0px",
+      "color": "#cccccc",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "padding": "8px 20px",
+      "outline": "none",
+      "boxShadow": "none",
+      "textTransform": "uppercase"
+    }
+  },
+  "task": {
+    "title": "MATB — Reliability & Workload",
+    "modules": {
+      "drt": {
+        "enabled": true,
+        "scope": "block",
+        "key": "space",
+        "responseWindowMs": 2500,
+        "displayDurationMs": 1000,
+        "responseTerminatesStimulus": true,
+        "stimMode": "border",
+        "border": {
+          "color": "#dc2626",
+          "widthPx": 5,
+          "radiusPx": 3,
+          "target": "display"
+        },
+        "isiSampler": {
+          "type": "uniform",
+          "min": 3000,
+          "max": 5000
+        }
+      }
+    }
+  },
+
+  "display": {
+    "maxWidthPx": 800,
+    "maxHeightPx": 600,
+    "minWidthPx": 800,
+    "minHeightPx": 600,
+    "aspectRatio": "4/3",
+    "marginPx": 48,
+    "background": "#0a0a0a"
+  },
+
+  "instructions": {
+    "intro": [
+      "Welcome to the Multi-Attribute Task Battery (MATB).",
+      "You will perform four tasks simultaneously across two 10-minute blocks separated by a short break.",
+      "SYSMON (top-left): Monitor four scale gauges and two lights. When a gauge drifts out of range or a light shows a failure state, press the assigned key (F1–F4 for scales, F5–F6 for lights) to acknowledge it.",
+      "TRACKING (top-right): Keep the red cursor inside the circular reticle by moving the mouse. Try to minimise the time spent outside the boundary.",
+      "COMMS (bottom-left): Audio messages will announce a callsign, a radio, and a target frequency. This panel is automated — you do not need to respond to it.",
+      "RESMAN (bottom-right): Maintain fuel levels in tanks A and B near their target values by switching pumps on and off with the number keys. Some pumps may fail during the task.",
+      "SECONDARY TASK — Detection Response Task (DRT): Occasionally a red border will flash around the display. Press the Space bar as quickly as possible whenever you see it. Do this while continuing all primary tasks.",
+      "Your task is to manage all four tasks as well as possible at the same time. The DRT probe will appear throughout both blocks.",
+      "Press Continue when you are ready to begin."
+    ],
+    "end": [
+      "The session is now complete.",
+      "Thank you for your participation.",
+      "Please complete the workload questionnaire on the next screen."
+    ]
+  },
+
+  "layout": {
+    "rows": 2,
+    "cols": 3,
+    "gap": "2px",
+    "background": "#d0d0d0",
+    "panels": [
+      { "id": "sysmon",     "row": 0, "col": 0, "label": "SYSTEM MONITORING" },
+      { "id": "tracking",   "row": 0, "col": 1, "label": "TRACKING" },
+      { "id": "scheduling", "row": 0, "col": 2, "label": "SCHEDULING" },
+      { "id": "comms",      "row": 1, "col": 0, "label": "COMMUNICATIONS" },
+      { "id": "resman",     "row": 1, "col": 1, "label": "RESOURCE MANAGEMENT" },
+      { "id": "pumpstatus", "row": 1, "col": 2, "label": "PUMP STATUS" }
+    ]
+  },
+
+  "subtasks": {
+    "sysmon": {
+      "alertTimeoutMs": 10000,
+      "feedbackDurationMs": 1500,
+      "driftIntervalMs": 200,
+      "scales": [
+        { "id": "scale1", "label": "TEMP1", "key": "f1", "driftSpeed": 1 },
+        { "id": "scale2", "label": "PRES1", "key": "f2", "driftSpeed": 1 },
+        { "id": "scale3", "label": "TEMP2", "key": "f3", "driftSpeed": 1 },
+        { "id": "scale4", "label": "PRES2", "key": "f4", "driftSpeed": 1 }
+      ],
+      "lights": [
+        { "id": "light1", "label": "OK",      "onColor": "#22c55e", "offColor": "#555", "defaultOn": true,  "key": "f5" },
+        { "id": "light2", "label": "WARNING", "onColor": "#ef4444", "offColor": "#555", "defaultOn": false, "key": "f6" }
+      ]
+    },
+    "tracking": {
+      "perturbation": {
+        "components": [
+          { "axis": "x", "frequencyHz": 0.06, "amplitude": 140 },
+          { "axis": "y", "frequencyHz": 0.06, "amplitude": 140 }
+        ],
+        "gainRatio": 0.8
+      }
+    },
+    "comms": { "automated": true, "muteAudio": true, "automatedResponseDelayMs": 3000 },
+    "resman": {}
+  },
+
+  "plan": {
+    "blocks": [
+      {
+        "label": "high-reliability",
+        "blockType": "experimental",
+        "durationMs": 600000,
+
+        "beforeBlockScreens": [
+          "Block 1 of 2 — High Reliability.",
+          "In this block, most system failures will resolve automatically within a few seconds. You should still respond as quickly and accurately as you can.",
+          "Remember to also respond to DRT probes (red border flash) with the Space bar.",
+          "Press Continue to begin Block 1."
+        ],
+        "afterBlockScreens": [
+          "Block 1 complete. Please take a short break before continuing.",
+          "Block 2 will follow the same procedures, but fewer failures will resolve automatically — you will need to respond to more events.",
+          "Press Continue when you are ready for Block 2."
+        ],
+
+        "scenario": {
+          "events": [
+            { "timeMs":  30000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "up" },
+            { "timeMs":  30000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs":  34000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": false },
+            { "timeMs":  34000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs":  70000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": "down" },
+            { "timeMs":  70000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs":  74000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": false },
+            { "timeMs":  74000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 102000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "up" },
+            { "timeMs": 102000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 106000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 106000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 120000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "up" },
+            { "timeMs": 120000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 124000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 124000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 167000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "down" },
+            { "timeMs": 167000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 171000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": false },
+            { "timeMs": 171000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 206000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": "down" },
+            { "timeMs": 206000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 210000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": false },
+            { "timeMs": 210000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 250000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "up" },
+            { "timeMs": 250000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 278000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": "down" },
+            { "timeMs": 278000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 282000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": false },
+            { "timeMs": 282000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 325000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "down" },
+            { "timeMs": 325000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 329000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 329000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 372000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "up" },
+            { "timeMs": 372000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 415000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": "up" },
+            { "timeMs": 415000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 419000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": false },
+            { "timeMs": 419000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 434000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "down" },
+            { "timeMs": 434000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 438000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 438000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 475000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "up" },
+            { "timeMs": 475000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 479000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": false },
+            { "timeMs": 479000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 497000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "down" },
+            { "timeMs": 497000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 525000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": "down" },
+            { "timeMs": 525000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 529000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": false },
+            { "timeMs": 529000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 580000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "up" },
+            { "timeMs": 580000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 584000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 584000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false }
+          ]
+        }
+      },
+
+      {
+        "label": "low-reliability",
+        "blockType": "experimental",
+        "durationMs": 600000,
+
+        "beforeBlockScreens": [
+          "Block 2 of 2 — Low Reliability.",
+          "In this block, fewer failures will resolve automatically. You will need to identify and respond to more events than in Block 1.",
+          "Continue managing all tasks as best you can, and respond to DRT border probes with Space.",
+          "Press Continue to begin Block 2."
+        ],
+
+        "scenario": {
+          "events": [
+            { "timeMs":  34000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "down" },
+            { "timeMs":  34000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs":  38000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs":  38000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs":  59000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": "up" },
+            { "timeMs":  59000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs":  63000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": false },
+            { "timeMs":  63000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 102000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "down" },
+            { "timeMs": 102000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 123000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "up" },
+            { "timeMs": 123000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 127000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 127000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 178000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": "down" },
+            { "timeMs": 178000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 206000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "down" },
+            { "timeMs": 206000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 244000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "up" },
+            { "timeMs": 244000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 248000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 248000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 268000, "target": "sysmon", "command": "set", "path": "light2.failure", "value": true },
+            { "timeMs": 268000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 338000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": "down" },
+            { "timeMs": 338000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 372000, "target": "sysmon", "command": "set", "path": "scale2.failure", "value": "up" },
+            { "timeMs": 372000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 390000, "target": "sysmon", "command": "set", "path": "light2.failure", "value": true },
+            { "timeMs": 390000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 394000, "target": "sysmon", "command": "set", "path": "light2.failure", "value": false },
+            { "timeMs": 394000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 434000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "down" },
+            { "timeMs": 434000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 438000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": false },
+            { "timeMs": 438000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 475000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": "up" },
+            { "timeMs": 475000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 479000, "target": "sysmon", "command": "set", "path": "scale3.failure", "value": false },
+            { "timeMs": 479000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 497000, "target": "sysmon", "command": "set", "path": "scale1.failure", "value": "down" },
+            { "timeMs": 497000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 535000, "target": "sysmon", "command": "set", "path": "light1.failure", "value": true },
+            { "timeMs": 535000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false },
+
+            { "timeMs": 571000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": "down" },
+            { "timeMs": 571000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": true },
+            { "timeMs": 575000, "target": "sysmon", "command": "set", "path": "scale4.failure", "value": false },
+            { "timeMs": 575000, "target": "sysmon", "command": "set", "path": "light2.on",      "value": false }
+          ]
+        }
+      }
+    ]
+  },
+
+  "endSurvey": {
+    "preset": "nasa_tlx",
+    "title": "Workload Assessment",
+    "required": true,
+    "questionBorder": "1px solid #444444",
+    "questionBorderRadius": "0px",
+    "submitButtonStyle": {
+      "background": "#222222",
+      "border": "1px solid #444444",
+      "borderRadius": "0px",
+      "color": "#cccccc",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "padding": "8px 20px",
+      "outline": "none",
+      "boxShadow": "none",
+      "textTransform": "uppercase"
+    }
+  }
+}

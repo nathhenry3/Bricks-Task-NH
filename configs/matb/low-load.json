@@ -1,0 +1,88 @@
+{
+  "task": {
+    "title": "MATB Low Load",
+    "durationMs": 480000
+  },
+  "instructions": {
+    "intro": [
+      "You are about to begin an 8-minute MATB session.",
+      "Task events occur at a relaxed pace in this session.",
+      "Monitor all four tasks and respond as accurately as possible.",
+      "Press Continue when ready."
+    ],
+    "end": [
+      "Session complete. Thank you."
+    ]
+  },
+  "layout": {
+    "rows": 2,
+    "cols": 3,
+    "gap": "2px",
+    "background": "#d0d0d0",
+    "panels": [
+      { "id": "sysmon",     "row": 0, "col": 0, "label": "SYSTEM MONITORING" },
+      { "id": "tracking",   "row": 0, "col": 1, "label": "TRACKING" },
+      { "id": "scheduling", "row": 0, "col": 2, "label": "SCHEDULING" },
+      { "id": "comms",      "row": 1, "col": 0, "label": "COMMUNICATIONS" },
+      { "id": "resman",     "row": 1, "col": 1, "label": "RESOURCE MANAGEMENT" },
+      { "id": "pumpstatus", "row": 1, "col": 2, "label": "PUMP STATUS" }
+    ]
+  },
+  "subtasks": {
+    "sysmon": {
+      "alertTimeoutMs": 14000,
+      "feedbackDurationMs": 1500,
+      "driftIntervalMs": 300
+    },
+    "tracking": {
+      "perturbation": {
+        "components": [
+          { "axis": "x", "frequencyHz": 0.025, "amplitude": 90 },
+          { "axis": "x", "frequencyHz": 0.055, "amplitude": 60 },
+          { "axis": "y", "frequencyHz": 0.04,  "amplitude": 90 },
+          { "axis": "y", "frequencyHz": 0.09,  "amplitude": 45 }
+        ],
+        "gainRatio": 0.85
+      }
+    },
+    "comms": {
+      "responseTimeoutMs": 25000,
+      "speech": {
+        "voiceNames": [
+          "Google UK English Male",
+          "Microsoft David - English (United States)",
+          "Microsoft Mark - English (United States)",
+          "Alex",
+          "Daniel"
+        ],
+        "lang": "en-US",
+        "rate": 0.9,
+        "pitch": 1.0
+      }
+    },
+    "resman": {}
+  },
+  "scenario": {
+    "events": [
+      { "timeMs":  40000, "target": "sysmon",  "command": "set", "path": "scale1.failure", "value": true },
+      { "timeMs":  65000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "com1", "frequency": 118.3 } },
+      { "timeMs":  90000, "target": "sysmon",  "command": "set", "path": "light1.failure", "value": true },
+      { "timeMs": 115000, "target": "comms",   "command": "prompt", "value": { "callsign": "DELTA221", "radio": "nav1", "frequency": 110.6 } },
+      { "timeMs": 130000, "target": "resman",  "command": "set", "path": "pump.1.state",   "value": "failed" },
+      { "timeMs": 155000, "target": "sysmon",  "command": "set", "path": "scale3.failure", "value": true },
+      { "timeMs": 160000, "target": "resman",  "command": "set", "path": "pump.1.state",   "value": "off" },
+      { "timeMs": 175000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "nav2", "frequency": 112.1 } },
+      { "timeMs": 205000, "target": "sysmon",  "command": "set", "path": "light2.failure", "value": true },
+      { "timeMs": 230000, "target": "comms",   "command": "prompt", "value": { "callsign": "ECHO775",  "radio": "com2", "frequency": 124.8 } },
+      { "timeMs": 255000, "target": "resman",  "command": "set", "path": "pump.3.state",   "value": "failed" },
+      { "timeMs": 275000, "target": "sysmon",  "command": "set", "path": "scale2.failure", "value": true },
+      { "timeMs": 285000, "target": "resman",  "command": "set", "path": "pump.3.state",   "value": "off" },
+      { "timeMs": 310000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "com2", "frequency": 126.7 } },
+      { "timeMs": 340000, "target": "sysmon",  "command": "set", "path": "scale4.failure", "value": true },
+      { "timeMs": 370000, "target": "comms",   "command": "prompt", "value": { "callsign": "DELTA221", "radio": "com1", "frequency": 119.0 } },
+      { "timeMs": 400000, "target": "sysmon",  "command": "set", "path": "light1.failure", "value": true },
+      { "timeMs": 425000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "nav1", "frequency": 111.4 } },
+      { "timeMs": 455000, "target": "sysmon",  "command": "set", "path": "scale1.failure", "value": true }
+    ]
+  }
+}

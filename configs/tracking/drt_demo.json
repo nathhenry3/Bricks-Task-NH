@@ -1,0 +1,104 @@
+{
+  "task": {
+    "implementation": "native_tracking",
+    "runner": "native",
+    "title": "Tracking + DRT Demo",
+    "modules": {
+      "drt": {
+        "enabled": true,
+        "scope": "block",
+        "key": "space",
+        "responseWindowMs": 2500,
+        "displayDurationMs": 1000,
+        "responseTerminatesStimulus": true,
+        "stimMode": "visual",
+        "visual": {
+          "shape": "square",
+          "color": "#dc2626",
+          "sizePx": 34,
+          "topPx": 14
+        },
+        "isiSampler": {
+          "type": "uniform",
+          "min": 3000,
+          "max": 5000
+        }
+      }
+    }
+  },
+  "instructions": {
+    "intro": [
+      "Primary task: keep cursor on moving target.",
+      "Secondary task: press space when DRT probes appear."
+    ],
+    "blockIntroTemplate": "{phase} block with {nTrials} tracking trials and concurrent DRT."
+  },
+  "display": {
+    "aperturePx": 500,
+    "frameBackground": "#0f172a",
+    "frameBorder": "#334155",
+    "canvasBackground": "#e2e8f0",
+    "showCrosshair": true
+  },
+  "trialDefaults": {
+    "durationMs": 20000,
+    "sampleIntervalMs": 16,
+    "binMs": 2000,
+    "storeRawSamples": false,
+    "target": {
+      "shape": "circle",
+      "sizePx": 56,
+      "colorOn": "#16a34a",
+      "colorOff": "#dc2626",
+      "borderColor": "#0f172a",
+      "borderWidthPx": 2
+    },
+    "motion": {
+      "mode": "waypoint",
+      "speedPxPerSec": 220,
+      "minSegmentPx": 120,
+      "arriveThresholdPx": 2
+    }
+  },
+  "interTrialIntervalMs": 300,
+  "plan": {
+    "blocks": [
+      {
+        "phase": "main",
+        "label": "DRT Visual",
+        "trials": 3,
+        "beforeBlockScreens": [
+          "This block uses visual square probes at top-center of the monitor."
+        ]
+      },
+      {
+        "phase": "main",
+        "label": "DRT Border",
+        "trials": 3,
+        "modules": {
+          "drt": {
+            "stimMode": "border",
+            "border": {
+              "color": "#dc2626",
+              "widthPx": 4,
+              "radiusPx": 0,
+              "target": "display"
+            }
+          }
+        },
+        "motion": {
+          "mode": "chaotic",
+          "speedPxPerSec": 180,
+          "directionJitterRadPerSec": 2.2
+        },
+        "target": {
+          "shape": "square",
+          "sizePx": 52
+        },
+        "beforeBlockScreens": [
+          "This block uses border-flash probes on the display frame."
+        ]
+      }
+    ]
+  }
+}

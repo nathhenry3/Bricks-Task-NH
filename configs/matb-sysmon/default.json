@@ -1,0 +1,59 @@
+{
+  "task": {
+    "title": "MATB System Monitoring"
+  },
+  "instructions": {
+    "intro": [
+      "Monitor the lights and scales for failures.",
+      "Press the labelled key (F1–F6) when you detect a failure.",
+      "Lights: F5 should be green (on), F6 should be off. Press the key if either changes.",
+      "Scales: arrows should stay in the centre zone. Press the key if one drifts to an extreme."
+    ]
+  },
+  "sysmon": {
+    "lights": [
+      { "id": "light1", "label": "F5", "onColor": "#22c55e", "offColor": "#555", "defaultOn": true, "key": "F5" },
+      { "id": "light2", "label": "F6", "onColor": "#ef4444", "offColor": "#555", "defaultOn": false, "key": "F6" }
+    ],
+    "scales": [
+      { "id": "scale1", "label": "F1", "key": "F1", "driftSpeed": 1 },
+      { "id": "scale2", "label": "F2", "key": "F2", "driftSpeed": 1 },
+      { "id": "scale3", "label": "F3", "key": "F3", "driftSpeed": 1 },
+      { "id": "scale4", "label": "F4", "key": "F4", "driftSpeed": 1 }
+    ],
+    "alertTimeoutMs": 10000,
+    "feedbackDurationMs": 1500,
+    "driftIntervalMs": 200
+  },
+  "trialDefaults": {
+    "durationMs": 60000,
+    "failureSchedule": [
+      { "timeMs": 5000,  "gaugeId": "scale1" },
+      { "timeMs": 15000, "gaugeId": "light1" },
+      { "timeMs": 25000, "gaugeId": "scale3", "side": -1 },
+      { "timeMs": 35000, "gaugeId": "light2" },
+      { "timeMs": 45000, "gaugeId": "scale2", "side": 1 },
+      { "timeMs": 55000, "gaugeId": "scale4" }
+    ]
+  },
+  "plan": {
+    "blocks": [
+      {
+        "label": "Practice",
+        "phase": "practice",
+        "trials": 1,
+        "trialDurationMs": 30000,
+        "failureSchedule": [
+          { "timeMs": 5000,  "gaugeId": "scale1" },
+          { "timeMs": 15000, "gaugeId": "light1" },
+          { "timeMs": 25000, "gaugeId": "scale3" }
+        ]
+      },
+      {
+        "label": "Main",
+        "phase": "main",
+        "trials": 3
+      }
+    ]
+  }
+}

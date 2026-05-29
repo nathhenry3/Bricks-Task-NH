@@ -1,0 +1,108 @@
+{
+  "task": {
+    "implementation": "native_tracking",
+    "runner": "native",
+    "title": "MOT + DRT Demo",
+    "modules": {
+      "drt": {
+        "enabled": true,
+        "scope": "block",
+        "key": "space",
+        "responseWindowMs": 2500,
+        "displayDurationMs": 1000,
+        "responseTerminatesStimulus": true,
+        "stimMode": "visual",
+        "visual": {
+          "shape": "square",
+          "color": "#dc2626",
+          "sizePx": 34,
+          "topPx": 14
+        },
+        "isiSampler": {
+          "type": "uniform",
+          "min": 3000,
+          "max": 5000
+        }
+      }
+    }
+  },
+  "instructions": {
+    "intro": [
+      "Track the highlighted target dots while all dots move.",
+      "When motion stops, click the dots that were targets and press space to confirm.",
+      "A concurrent DRT will run continuously through the block."
+    ],
+    "blockIntroTemplate": "{phase} block with {nTrials} MOT trials and continuous DRT."
+  },
+  "display": {
+    "aperturePx": 500,
+    "frameBackground": "#0f172a",
+    "frameBorder": "#334155",
+    "canvasBackground": "#0b1020",
+    "showCrosshair": false,
+    "rendererBackend": "pixi"
+  },
+  "trialDefaults": {
+    "mode": "mot",
+    "durationMs": 12000,
+    "sampleIntervalMs": 16,
+    "binMs": 2000,
+    "storeRawSamples": false,
+    "motion": {
+      "mode": "waypoint",
+      "speedPxPerSec": 140,
+      "minSegmentPx": 90,
+      "arriveThresholdPx": 2
+    },
+    "mot": {
+      "objectCount": 10,
+      "targetCount": 3,
+      "objectRadiusPx": 14,
+      "cueDurationMs": 2500,
+      "responseMaxDurationMs": 0,
+      "responseFinishKey": "space",
+      "cueTargetColor": "#ef4444",
+      "cueDistractorColor": "#3b82f6",
+      "trackingColor": "#3b82f6",
+      "responseSelectedColor": "#f8fafc",
+      "responseUnselectedColor": "#3b82f6",
+      "objectBorderColor": "#0f172a",
+      "objectBorderWidthPx": 2,
+      "responsePromptText": "Select targets, then press SPACE to confirm."
+    }
+  },
+  "interTrialIntervalMs": 300,
+  "plan": {
+    "blocks": [
+      {
+        "phase": "mot_practice",
+        "label": "MOT Practice",
+        "trials": 2,
+        "beforeBlockScreens": [
+          "Targets are red at first, then all dots turn blue while motion continues."
+        ]
+      },
+      {
+        "phase": "mot_main",
+        "label": "MOT Main",
+        "trials": 3,
+        "motion": {
+          "mode": "chaotic",
+          "speedPxPerSec": 125,
+          "directionJitterRadPerSec": 1.8
+        },
+        "modules": {
+          "drt": {
+            "stimMode": "border",
+            "border": {
+              "color": "#dc2626",
+              "widthPx": 4,
+              "radiusPx": 0,
+              "target": "display"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

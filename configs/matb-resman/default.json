@@ -1,0 +1,65 @@
+{
+  "task": {
+    "title": "MATB Resource Management"
+  },
+  "instructions": {
+    "intro": [
+      "Manage the tank system by toggling pumps on and off.",
+      "Tanks A and B are target tanks — keep their levels in the green zone.",
+      "Press numpad keys 1–8 to toggle the corresponding pump.",
+      "Pumps may fail (turn red) — failed pumps cannot be toggled until restored."
+    ]
+  },
+  "resman": {
+    "tanks": [
+      { "id": "a", "label": "A", "startLevel": 2500, "maxLevel": 4000, "targetLevel": 2500, "depletable": true, "leakPerMinute": 800, "side": "left" },
+      { "id": "b", "label": "B", "startLevel": 2500, "maxLevel": 4000, "targetLevel": 2500, "depletable": true, "leakPerMinute": 800, "side": "right" },
+      { "id": "c", "label": "C", "startLevel": 1000, "maxLevel": 2000, "depletable": true, "leakPerMinute": 0, "side": "left" },
+      { "id": "d", "label": "D", "startLevel": 1000, "maxLevel": 2000, "depletable": true, "leakPerMinute": 0, "side": "right" },
+      { "id": "e", "label": "E", "startLevel": 3000, "maxLevel": 4000, "depletable": false, "leakPerMinute": 0, "side": "left" },
+      { "id": "f", "label": "F", "startLevel": 3000, "maxLevel": 4000, "depletable": false, "leakPerMinute": 0, "side": "right" }
+    ],
+    "pumps": [
+      { "id": "1", "label": "1", "source": "c", "dest": "a", "flowPerMinute": 800, "key": "1" },
+      { "id": "2", "label": "2", "source": "e", "dest": "a", "flowPerMinute": 600, "key": "2" },
+      { "id": "3", "label": "3", "source": "d", "dest": "b", "flowPerMinute": 800, "key": "3" },
+      { "id": "4", "label": "4", "source": "f", "dest": "b", "flowPerMinute": 600, "key": "4" },
+      { "id": "5", "label": "5", "source": "e", "dest": "c", "flowPerMinute": 600, "key": "5" },
+      { "id": "6", "label": "6", "source": "f", "dest": "d", "flowPerMinute": 600, "key": "6" },
+      { "id": "7", "label": "7", "source": "a", "dest": "b", "flowPerMinute": 400, "key": "7" },
+      { "id": "8", "label": "8", "source": "b", "dest": "a", "flowPerMinute": 400, "key": "8" }
+    ],
+    "toleranceRadius": 250,
+    "updateIntervalMs": 2000
+  },
+  "trialDefaults": {
+    "durationMs": 120000,
+    "failureSchedule": [
+      { "timeMs": 15000,  "pumpId": "3", "state": "failure" },
+      { "timeMs": 25000,  "pumpId": "3", "state": "off" },
+      { "timeMs": 45000,  "pumpId": "1", "state": "failure" },
+      { "timeMs": 60000,  "pumpId": "1", "state": "off" },
+      { "timeMs": 75000,  "pumpId": "4", "state": "failure" },
+      { "timeMs": 90000,  "pumpId": "4", "state": "off" }
+    ]
+  },
+  "plan": {
+    "blocks": [
+      {
+        "label": "Practice",
+        "phase": "practice",
+        "trials": 1,
+        "trialDurationMs": 60000,
+        "failureSchedule": [
+          { "timeMs": 15000, "pumpId": "3", "state": "failure" },
+          { "timeMs": 30000, "pumpId": "3", "state": "off" }
+        ]
+      },
+      {
+        "label": "Main",
+        "phase": "main",
+        "trials": 2
+      }
+    ]
+  }
+}

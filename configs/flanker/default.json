@@ -1,0 +1,54 @@
+{
+  "task": {
+    "title": "Flanker Task",
+    "instructions": "In this task, you will see a row of arrows. Your goal is to identify the direction of the **center arrow**.\n\nPress **F** if the center arrow points LEFT (<).\nPress **J** if the center arrow points RIGHT (>).\n\nIgnore the surrounding arrows.",
+    "rtTask": {
+      "timing": {
+        "trialDurationMs": 2000,
+        "fixationOnsetMs": 0,
+        "fixationDurationMs": 500,
+        "stimulusOnsetMs": 700,
+        "responseWindowStartMs": 700,
+        "responseWindowEndMs": 1700
+      },
+      "feedbackPhase": "separate",
+      "postResponseContent": "blank"
+    }
+  },
+  "mapping": {
+    "leftKey": "f",
+    "rightKey": "j"
+  },
+  "display": {
+    "aperturePx": 440,
+    "stimulusFontSizePx": 56,
+    "stimulusSpacingPx": 10,
+    "stimulusColor": "#000000"
+  },
+  "stimuli": {
+    "leftTarget": "<",
+    "rightTarget": ">",
+    "leftFlanker": "<",
+    "rightFlanker": ">",
+    "neutralFlanker": "-",
+    "flankerCount": 4
+  },
+  "conditions": {
+    "quotaPerBlock": {
+      "congruent": 12,
+      "incongruent": 12,
+      "neutral": 12
+    },
+    "maxConditionRunLength": 3
+  },
+  "plan": {
+    "blockCount": 2,
+    "blockTemplate": {
+      "trials": 36,
+      "feedback": {
+        "enabled": true,
+        "durationMs": 400
+      }
+    }
+  }
+}

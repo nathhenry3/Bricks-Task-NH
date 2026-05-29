@@ -1,0 +1,460 @@
+{
+  "display": {
+    "frameBackground": "#fffaff",
+    "fixationFontSizePx": 20,
+    "fixationFontWeight": 300,
+    "stimulusFontSizePx": 30,
+    "frameBorder": "2px solid #DA70D6"
+  },
+  "ui": {
+    "pageBackground": "linear-gradient(135deg, #fdfcfb 0%, #e2d1f9 100%)",
+    "cardWidth": "600px",
+    "cardMinHeight": "400px",
+    "cardBackground": "rgba(255, 255, 255, 0.95)",
+    "cardBorder": "1px solid #DA70D6",
+    "cardBorderRadius": "12px",
+    "cardColor": "#2A2431",
+    "cardFontSize": "1.2rem",
+    "cardFontFamily": "system-ui, -apple-system, sans-serif"
+  },
+  "task": {
+    "title": "Honours Project - Annika",
+    "rtTask": {
+      "enabled": true,
+      "timing": {
+        "trialDurationMs": 3000,
+        "fixationOnsetMs": 250,
+        "fixationDurationMs": 250,
+        "stimulusOnsetMs": 750,
+        "stimulusDurationMs": 2250,
+        "responseWindowStartMs": 750,
+        "responseWindowEndMs": 3000
+      },
+      "responseTerminatesTrial": false
+    },
+    "modules": {
+      "injector": {
+        "enabled": true,
+        "injections": [
+          {
+            "id": "pm_injection",
+            "enabled": "$var.pmEnabled",
+            "eligibleTrialTypes": ["F"],
+            "schedule": {
+              "count": "$var.pmCount",
+              "minSeparation": 8,
+              "maxSeparation": 18
+            },
+            "source": {
+              "type": "category_in",
+              "categories": "$var.pmCategories"
+            },
+            "sourceDraw": {
+              "mode": "without_replacement",
+              "scope": "participant",
+              "shuffle": true,
+              "categoryMode": "without_replacement"
+            },
+            "set": {
+              "trialType": "PM",
+              "itemCategory": "PM",
+              "correctResponse": "$var.keys.pm",
+              "responseCategory": "pm"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "mapping": {
+    "targetKey": "$var.keys.target",
+    "nonTargetKey": "$var.keys.nonTarget"
+  },
+  "instructions": {
+    "pages": [
+      "Welcome to the experiment.\n\nIn this experiment you will be presented with a series of words that progress automatically.\nYou will need to remember the sequence of words to complete a '2-back' task.\nOn each trial, you need to decide whether the word is the same as the one two (2) words ago (${var.keys.target}) or not (${var.keys.nonTarget}).",
+      "Let's have a short practice. Each trial will present one word.\nYou must decide whether the word matches the one presented two (2) trials ago.\n\nIf the word matches, it is a target.\n\n'2-back' means the word before the previous word.\nE.g. In the sequence 'honey', 'jelly', 'honey', the second 'honey' is a 2-back target."
+    ],
+    "showTaskTitleCard": false,
+    "blockIntroTemplate": "$var.blockIntro",
+    "showBlockLabel": false,
+    "preBlockBeforeBlockIntro": true,
+    "skipBeforeBlockScreensOnRepeat": true,
+    "insertions": [
+      {
+        "id": "start_fullscreen",
+        "at": "task_intro_before",
+        "pages": [
+          {
+            "title": "Ready to begin",
+            "text": "Click the button below to start the study in fullscreen mode.",
+            "actions": [
+              { "id": "start_fullscreen", "label": "Start in fullscreen", "action": "continue" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "consent_form",
+        "at": "task_intro_before",
+        "pages": [
+          {
+            "title": "",
+            "html": "<iframe src=\"assets/pm-words/consent.html\" title=\"Consent form\" style=\"width:min(980px,96vw);height:90vh;border:1px solid #d1d5db;border-radius:8px;background:#fff;\"></iframe>",
+            "actions": [
+              { "id": "consent_yes", "label": "I Consent", "action": "continue" },
+              { "id": "consent_no", "label": "Disagree (exit study)", "action": "exit" }
+            ]
+          }
+        ]
+      },
+     {
+         "id": "keys_reminder",
+         "at": "block_start_after_intro",
+         "pages": ["$var.afterIntroPage"],
+         "when": { "isPractice": false }
+      },
+      {
+        "id": "debrief_form",
+        "at": "task_end_after",
+        "pages": [
+          {
+            "title": "Debrief",
+            "html": "<iframe src=\"assets/pm-words/debrief.html\" title=\"Debrief form\" style=\"width:min(980px,96vw);height:80vh;border:1px solid #d1d5db;border-radius:8px;background:#fff;\"></iframe>",
+            "actions": [
+              { "id": "debrief_continue", "label": "Continue", "action": "continue" }
+            ]
+          }
+        ]
+      }
+    ],
+    "blockSummary": {
+      "enabled": true,
+      "at": "before_post",
+      "title": "Feedback",
+      "lines": [
+        {
+          "text": "Target accuracy: {accuracyPct}% ({correct}/{total})",
+          "where": {
+            "trialType": ["N"]
+          }
+        },
+        {
+          "text": "Non-target accuracy: {accuracyPct}% ({correct}/{total})",
+          "where": {
+            "trialType": ["F", "L*"]
+          }
+        }
+      ],
+      "metrics": {
+        "correctField": "responseCorrect",
+        "rtField": "responseRtMs"
+      },
+      "when": {
+        "isPractice": true
+      }
+    },
+    "endPages": "DO NOT CLOSE THIS WINDOW!\nThat concludes the experiment. \nThank you very much for participating.\n\nPlease read the debrief form on the next screen, then click Continue.\nThe experiment will redirect to SONA and automatically apply your credits.\n\nDo not close the window until you see a message from SONA that your credits have been awarded!"
+  },
+  "stimuliCsv": {
+    "basePath": "{runtime.assetsBase}/pm-words",
+    "idColumn": "word",
+    "categories": {
+      "fruit_veg": { "path": "fruit_vegetable_Annika.csv", "idColumn": "word" },
+      "colour": { "path": "colour_Annika.csv", "idColumn": "word" },
+      "animal": { "path": "animal_Annika.csv", "idColumn": "word" },
+      "clothing": { "path": "clothing_Annika.csv", "idColumn": "word" },
+      "control": "control_Annika.csv",
+      "practice": "practice_Annika.csv"
+    }
+  },
+  "variables": {
+    "pmEnabled": false,
+    "pmCount": 0,
+    "pmCategories": [],
+    "blockIntroGenericNoPM": "You will now complete the next set of 2-back trials.",
+    "blockIntroGenericPM": "You will now complete the next set of 2-back and PM trials.",
+    "afterIntroGenericPM": "Remember:\n\nPress '${var.keys.pm}' for items in the PM category.\nPress '${var.keys.target}' when the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'.\n\nPress \"continue\" to begin the next block.",
+    "afterIntroGenericPM3": "Remember:\n\nPress '${var.keys.pm}' for items in the PM categories.\nPress '${var.keys.target}' when the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'.\n\nPress \"continue\" to begin the next block.",
+    "keys": {
+      "scope": "participant",
+      "sampler": {
+        "type": "list",
+        "values": [
+          { "target": "s", "nonTarget": "d",  "pm": "j" },
+          { "target": "d", "nonTarget": "s", "pm": "j"},
+          { "target": "s", "nonTarget": "d",  "pm": "k" },
+          { "target": "d", "nonTarget": "s", "pm": "k"},
+          { "target": "j", "nonTarget": "k",  "pm": "s" },
+          { "target": "k", "nonTarget": "j", "pm": "s"},
+          { "target": "j", "nonTarget": "k",  "pm": "d" },
+          { "target": "k", "nonTarget": "j", "pm": "d"}
+        ]
+      }
+    },
+    "pmOrder": {
+      "scope": "participant",
+      "count": 4,
+      "sampler": {
+        "type": "list",
+        "without_replacement": true,
+        "values": [
+          { "categoryKey": "Fruit & vegetables", "label": "fruit_veg", "descriptor": "A type of fruit or vegetable" },
+          { "categoryKey": "Colour", "label": "colour", "descriptor": "The name of a colour" },
+          { "categoryKey": "Animal", "label": "animal", "descriptor": "A non-human animal" },
+          { "categoryKey": "Clothing", "label": "clothing", "descriptor": "Something you can wear" }
+        ]
+      }
+    },
+    "between": {
+      "scope": "participant",
+      "sampler": {
+        "type": "list",
+        "values": [
+          {
+            "cell1Enabled": true,
+            "cell1PmCount": 10,
+            "cell1PmCategories": ["$var.pmOrder.0.label"],
+            "cell1PreScreen": "In the following blocks you will also perform a task we call \"PM\" (Prospective Memory).\n\nThe PM task requires you to press the '${var.keys.pm}' key on trials where a word belongs to a certain category.\nYou will be told what categories require a PM response.\n\nYou need to remember to press '${var.keys.pm}' whenever you see a word belonging to those categories.",
+            "cell1Intro": "For the following blocks, the PM category is:\n\n\"${var.pmOrder.0.categoryKey}\": \"${var.pmOrder.0.descriptor}.\"\n\nPress '${var.keys.pm}' for items in this category.\n\nYou will continue to respond to the n-back task when words do not belong to the PM category.",
+            "cell1GenericIntro": "$var.blockIntroGenericPM",
+            "cell1AfterIntro": "$var.afterIntroGenericPM",
+            "cell1PostScreen": "Well done!\n\nYou will no longer be required to respond to \"${var.pmOrder.0.categoryKey}\" words.\n\nIn the next set of trials, you will be given a new set of categories for the PM task.",
+            "cell2Enabled": true,
+            "cell2PmCount": 10,
+            "cell2PmCategories": ["$var.pmOrder.1.label", "$var.pmOrder.2.label", "$var.pmOrder.3.label"],
+            "cell2Intro": "For the following blocks, the PM categories are\n\n\"${var.pmOrder.1.categoryKey}\": \"${var.pmOrder.1.descriptor}.\n\"${var.pmOrder.2.categoryKey}\": \"${var.pmOrder.2.descriptor}.\n\"${var.pmOrder.3.categoryKey}\": \"${var.pmOrder.3.descriptor}.\"\n\nPress '${var.keys.pm}' for items in any of these categories.\n\nYou will continue to respond to the n-back task when words do not belong to the PM categories.",
+            "cell2GenericIntro": "$var.blockIntroGenericPM",
+            "cell2AfterIntro": "$var.afterIntroGenericPM3",
+            "cell2PreScreen": "",
+            "cell2PostScreen": "There will be no more PM trials in the experiment.\nFor the remaining trials, please complete the n-back task as usual.\nYou do not need to look for any word categories.",
+            "cell3Enabled": false,
+            "cell3PmCount": 0,
+            "cell3PmCategories": [],
+            "cell3Intro": "You will now complete the next set of 2-back trials.",
+            "cell3GenericIntro": "$var.blockIntroGenericNoPM",
+            "cell3AfterIntro": "Remember:\n\nPress '${var.keys.target}' when the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'.\n\nPress \"continue\" to begin the next block.",
+            "cell3PreScreen": "",
+            "cell3PostScreen": ""
+          },
+          {
+            "cell1Enabled": true,
+            "cell1PmCount": 10,
+            "cell1PmCategories": ["$var.pmOrder.1.label", "$var.pmOrder.2.label", "$var.pmOrder.3.label"],
+            "cell1PreScreen": "In the following blocks you will also perform a task we call \"PM\" (Prospective Memory).\n\nThe PM task requires you to press the '${var.keys.pm}' key on trials where a word belongs to a certain category.\nYou will be told what categories require a PM response.\n\nYou need to remember to press '${var.keys.pm}' whenever you see a word belonging to those categories.",
+            "cell1Intro": "For the following blocks, the PM categories are\n\n\"${var.pmOrder.1.categoryKey}\": \"${var.pmOrder.1.descriptor}.\n\"${var.pmOrder.2.categoryKey}\": \"${var.pmOrder.2.descriptor}.\n\"${var.pmOrder.3.categoryKey}\": \"${var.pmOrder.3.descriptor}.\"\n\nPress '${var.keys.pm}' for items in any of these categories.\n\nYou will continue to respond to the n-back task when words do not belong to the PM categories.",
+            "cell1GenericIntro": "$var.blockIntroGenericNoPM",
+            "cell1AfterIntro": "$var.afterIntroGenericPM3",
+            "cell1PostScreen": "Well done!\n\nYou will no longer be required to respond to \"${var.pmOrder.1.categoryKey},\" \"${var.pmOrder.2.categoryKey}\", or \"${var.pmOrder.3.categoryKey}\" words.\n\nIn the next set of trials, you will be given a new category for the PM task.",
+            "cell2Enabled": true,
+            "cell2PmCount": 10,
+            "cell2PmCategories": ["$var.pmOrder.0.label"],
+            "cell2Intro": "For the following blocks, the PM category is:\n\n\"${var.pmOrder.0.categoryKey}\": \"${var.pmOrder.0.descriptor}.\"\n\nPress '${var.keys.pm}' for items in this category.\n\nYou will continue to respond to the n-back task when words do not belong to the PM category.",
+            "cell2GenericIntro": "$var.blockIntroGenericPM",
+            "cell2AfterIntro": "$var.afterIntroGenericPM",
+            "cell2PreScreen": "",
+            "cell2PostScreen": "There will be no more PM trials in the experiment.\nFor the remaining trials, please complete the n-back task as usual.\nYou do not need to look for any word categories.",
+            "cell3Enabled": false,
+            "cell3PmCount": 0,
+            "cell3PmCategories": [],
+            "cell3Intro": "You will now complete the next set of 2-back trials.",
+            "cell3GenericIntro": "$var.blockIntroGenericPM",
+            "cell3AfterIntro": "Remember:\n\nPress '${var.keys.target}' when the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'.\n\nPress \"continue\" to begin the next block.",
+            "cell3PreScreen": "",
+            "cell3PostScreen": ""
+          },
+          {
+            "cell1Enabled": false,
+            "cell1PmCount": 0,
+            "cell1PmCategories": [],
+            "cell1Intro": "You will now complete the next set of 2-back trials.",
+            "cell1GenericIntro": "$var.blockIntroGenericNoPM",
+            "cell1AfterIntro": "Remember:\n\nPress '${var.keys.target}' when the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'.\n\nPress \"continue\" to begin the next block.",
+            "cell1PreScreen": "",
+            "cell1PostScreen": "",
+            "cell2Enabled": true,
+            "cell2PmCount": 10,
+            "cell2PmCategories": ["$var.pmOrder.0.label"],
+            "cell2PreScreen": "In the following blocks you will also perform a task we call \"PM\" (Prospective Memory).\n\nThe PM task requires you to press the '${var.keys.pm}' key on trials where a word belongs to a certain category.\nYou will be told what categories require a PM response.\n\nYou need to remember to press '${var.keys.pm}' whenever you see a word belonging to those categories.",
+            "cell2Intro": "For the following blocks, the PM category is:\n\n\"${var.pmOrder.0.categoryKey}\": \"${var.pmOrder.0.descriptor}.\"\n\nPress '${var.keys.pm}' for items in this category.\n\nYou will continue to respond to the n-back task when words do not belong to the PM category.",
+            "cell2GenericIntro": "$var.blockIntroGenericPM",
+            "cell2AfterIntro": "$var.afterIntroGenericPM",
+            "cell2PostScreen": "Well done!\n\nYou will no longer be required to respond to \"${var.pmOrder.0.categoryKey}\" words.\n\nIn the next set of trials, you will be given a new set of categories for the PM task.",
+            "cell3Enabled": true,
+            "cell3PmCount": 10,
+            "cell3PmCategories": ["$var.pmOrder.1.label", "$var.pmOrder.2.label", "$var.pmOrder.3.label"],
+            "cell3Intro": "For the following blocks, the PM categories are\n\n\"${var.pmOrder.1.categoryKey}\": \"${var.pmOrder.1.descriptor}.\n\"${var.pmOrder.2.categoryKey}\": \"${var.pmOrder.2.descriptor}.\n\"${var.pmOrder.3.categoryKey}\": \"${var.pmOrder.3.descriptor}.\"\n\nPress '${var.keys.pm}' for items in any of these categories.\n\nYou will continue to respond to the n-back task when words do not belong to the PM categories.",
+            "cell3GenericIntro": "$var.blockIntroGenericPM",
+            "cell3AfterIntro": "$var.afterIntroGenericPM3",
+            "cell3PreScreen": "",
+            "cell3PostScreen": ""
+          },
+          {
+            "cell1Enabled": false,
+            "cell1PmCount": 0,
+            "cell1PmCategories": [],
+            "cell1Intro": "You will now complete the next set of 2-back trials.",
+            "cell1GenericIntro": "$var.blockIntroGenericNoPM",
+            "cell1AfterIntro": "Remember:\n\nPress '${var.keys.target}' when the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'.\n\nPress \"continue\" to begin the next block.",
+            "cell1PreScreen": "",
+            "cell1PostScreen": "",
+            "cell2Enabled": true,
+            "cell2PmCount": 10,
+            "cell2PmCategories": ["$var.pmOrder.1.label", "$var.pmOrder.2.label", "$var.pmOrder.3.label"],
+            "cell2PreScreen": "In the following blocks you will also perform a task we call \"PM\" (Prospective Memory).\n\nThe PM task requires you to press the '${var.keys.pm}' key on trials where a word belongs to a certain category.\nYou will be told what categories require a PM response.\n\nYou need to remember to press '${var.keys.pm}' whenever you see a word belonging to those categories.",
+            "cell2Intro": "For the following blocks, the PM categories are\n\n\"${var.pmOrder.1.categoryKey}\": \"${var.pmOrder.1.descriptor}.\n\"${var.pmOrder.2.categoryKey}\": \"${var.pmOrder.2.descriptor}.\n\"${var.pmOrder.3.categoryKey}\": \"${var.pmOrder.3.descriptor}.\"\n\nPress '${var.keys.pm}' for items in any of these categories.\n\nYou will continue to respond to the n-back task when words do not belong to the PM categories.",
+            "cell2GenericIntro": "$var.blockIntroGenericPM",
+            "cell2AfterIntro": "$var.afterIntroGenericPM3",
+            "cell2PostScreen": "Well done!\n\nYou will no longer be required to respond to \"${var.pmOrder.1.categoryKey},\" \"${var.pmOrder.2.categoryKey}\", or \"${var.pmOrder.3.categoryKey}\" words.\n\nIn the next set of trials, you will be given a new category for the PM task.",
+            "cell3Enabled": true,
+            "cell3PmCount": 10,
+            "cell3PmCategories": ["$var.pmOrder.0.label"],
+            "cell3Intro": "For the following blocks, the PM category is:\n\n\"${var.pmOrder.0.categoryKey}\": \"${var.pmOrder.0.descriptor}.\"\n\nPress '${var.keys.pm}' for items in this category.\n\nYou will continue to respond to the n-back task when words do not belong to the PM category.",
+            "cell3GenericIntro": "$var.blockIntroGenericPM",
+            "cell3AfterIntro": "$var.afterIntroGenericPM",
+            "cell3PreScreen": "",
+            "cell3PostScreen": ""
+          }
+        ]
+      }
+    }
+  },
+  "nbackRule": {
+    "lureLagPasses": [ [4, 5], [6, 7, 8, 9] ],
+    "maxInsertionAttempts": 10
+  },
+  "stimulusPools": {
+    "nbackDraw": {
+      "mode": "without_replacement",
+      "scope": "participant",
+      "shuffle": true
+    }
+  },
+  "plan": {
+    "manipulations": [
+      {
+        "id": "practice",
+        "overrides": {
+          "nLevel": 2,
+          "variables": {
+            "pmEnabled": false,
+            "pmCount": 0,
+            "pmCategories": [],
+            "blockIntro": "\n\nPress '${var.keys.target}' if the word is the same as it was two (2) words ago.\nOtherwise, press '${var.keys.nonTarget}'."
+          },
+          "beforeBlockScreens": ["Trials will proceed automatically, but you must respond to each word.\n\nThe first two words cannot be targets, because there are no corresponding two-back trials.\n\nNote that words may repeat, but only repeats of exactly two (2) words ago are targets.\n\nYou will receive feedback after the block is finished."],
+          "nbackSourceCategories": ["practice"]
+        }
+      },
+      {
+        "id": "main_control_pool",
+        "overrides": {
+          "nbackSourceCategories": ["control"]
+        }
+      },
+      {
+        "id": "cell_1",
+        "overrides": {
+          "nLevel": 2,
+          "variables": {
+            "pmEnabled": "$between.cell1Enabled",
+            "pmCount": "$between.cell1PmCount",
+            "pmCategories": "$between.cell1PmCategories",
+            "blockIntro": "$between.cell1Intro",
+            "afterIntroPage": "$between.cell1AfterIntro"
+          }
+        }
+      },
+      {
+        "id": "cell_1_generic_intro",
+        "overrides": {
+          "variables": {
+            "blockIntro": "$between.cell1GenericIntro"
+          }
+        }
+      },
+      {
+        "id": "cell_2",
+        "overrides": {
+          "nLevel": 2,
+          "variables": {
+            "pmEnabled": "$between.cell2Enabled",
+            "pmCount": "$between.cell2PmCount",
+            "pmCategories": "$between.cell2PmCategories",
+            "blockIntro": "$between.cell2Intro",
+            "afterIntroPage": "$between.cell2AfterIntro"
+          }
+        }
+      },
+      {
+        "id": "cell_2_generic_intro",
+        "overrides": {
+          "variables": {
+            "blockIntro": "$between.cell2GenericIntro"
+          }
+        }
+      },
+      {
+        "id": "cell_3",
+        "overrides": {
+          "nLevel": 2,
+          "variables": {
+            "pmEnabled": "$between.cell3Enabled",
+            "pmCount": "$between.cell3PmCount",
+            "pmCategories": "$between.cell3PmCategories",
+            "blockIntro": "$between.cell3Intro",
+            "afterIntroPage": "$between.cell3AfterIntro"
+          }
+        }
+      },
+      {
+        "id": "cell_3_generic_intro",
+        "overrides": {
+          "variables": {
+            "blockIntro": "$between.cell3GenericIntro"
+          }
+        }
+      }
+    ],
+    "blocks": [
+      { "phase": "practice", "manipulation": "practice", "label": "Practice Block","trials": 20, "lureCount": 4, "targetCount": 4,
+          "rtTask": {"timing": {
+            "trialDurationMs": 4000,
+            "fixationOnsetMs": 250,
+            "fixationDurationMs": 500,
+            "stimulusOnsetMs": 750,
+            "stimulusDurationMs": 3250,
+            "responseWindowStartMs": 750,
+            "responseWindowEndMs": 4000}},
+        "afterBlockScreens": ["Great work! You will now begin the experimental trials.\n\nBlocks consist of 100 words that proceed automatically.\nFor each word, decide if it was the same as the word two (2) words ago.\n\nYou will be given plenty of breaks between blocks."],
+        "repeatAfterBlockScreens": ["Press continue when you are ready for the next set of trials."],
+        "repeatUntil": {
+          "enabled": true,
+          "maxAttempts": 3,
+          "minCorrect": 2,
+          "where": { "trialType": ["N"] },
+          "metrics": { "correctField": "responseCorrect" }}
+      },
+      { "phase": "main", "label": "Block 1", "manipulation": "cell_1", "manipulations": ["main_control_pool"], "trials": 100, "lureCount": 14, "targetCount": 20, "beforeBlockScreens": ["$between.cell1PreScreen"]},
+      { "phase": "main", "label": "Block 2", "manipulation": "cell_1", "manipulations": ["main_control_pool", "cell_1_generic_intro"], "trials": 100, "lureCount": 14, "targetCount": 20, "afterBlockScreens": ["$between.cell1PostScreen"]},
+      { "phase": "main", "label": "Block 3", "manipulation": "cell_2", "manipulations": ["main_control_pool"], "trials": 100, "lureCount": 14, "targetCount": 20,  "beforeBlockScreens": ["$between.cell2PreScreen"], "afterBlockScreens": ["You are halfway through the experiment.\nTake a short break before continuing."]},
+      { "phase": "main", "label": "Block 4", "manipulation": "cell_2", "manipulations": ["main_control_pool", "cell_2_generic_intro"], "trials": 100, "lureCount": 14, "targetCount": 20, "afterBlockScreens": ["$between.cell2PostScreen"]},
+      { "phase": "main", "label": "Block 5", "manipulation": "cell_3", "manipulations": ["main_control_pool"], "trials": 100, "lureCount": 14, "targetCount": 20, "beforeBlockScreens": ["$between.cell3PreScreen"]},
+      { "phase": "main", "label": "Block 6", "manipulation": "cell_3", "manipulations": ["main_control_pool", "cell_3_generic_intro"], "trials": 100, "lureCount": 14, "targetCount": 20}
+    ]
+  },
+  "feedback": {
+    "enabled": false,
+    "durationMS": 1000,
+    "style": {
+        "fontSizePx": 30
+    }
+  },
+  "completion": {
+    "redirect": {
+      "enabled": true,
+      "completeUrlTemplate": "https://uwapsychology.sona-systems.com/webstudy_credit.aspx?experiment_id=1941&credit_token=b8ca8b7c1ba043b497ed31356565b3a6&survey_code={participantId}",
+      "incompleteUrlTemplate": ""
+    }
+  }
+}

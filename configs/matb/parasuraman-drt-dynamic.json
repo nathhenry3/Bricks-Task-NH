@@ -1,0 +1,329 @@
+{
+  "_comment": "Three-block automation handover demonstration using dynamic scenario generation. Block 1 = full automation (all four tasks automated). Block 2 = partial handover (sysmon + resman returned to participant; comms + tracking remain automated). Block 3 = full manual (all tasks manual, highest load). DRT runs throughout. Wald transform overlay monitors drift rate.",
+
+  "ui": {
+    "pageBackground": "#0a0a0a",
+    "cardWidth": "800px",
+    "cardMinHeight": "600px",
+    "cardBackground": "#1a1a1a",
+    "cardBorder": "1px solid #444444",
+    "cardBorderRadius": "0px",
+    "cardColor": "#cccccc",
+    "cardFontSize": "1rem",
+    "cardFontFamily": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    "continueButtonStyle": {
+      "background": "#222222",
+      "border": "1px solid #444444",
+      "borderRadius": "0px",
+      "color": "#cccccc",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "padding": "8px 20px",
+      "outline": "none",
+      "boxShadow": "none",
+      "textTransform": "uppercase"
+    }
+  },
+
+  "task": {
+    "title": "MATB — Automation Handover & DRT",
+    "modules": {
+      "drt": {
+        "enabled": true,
+        "scope": "block",
+        "key": "space",
+        "responseWindowMs": 2500,
+        "displayDurationMs": 1000,
+        "responseTerminatesStimulus": true,
+        "stimMode": "border",
+        "border": {
+          "color": "#dc2626",
+          "widthPx": 5,
+          "radiusPx": 3,
+          "target": "display"
+        },
+        "isiSampler": {
+          "type": "uniform",
+          "min": 3000,
+          "max": 5000
+        },
+        "parameterTransforms": [
+          {
+            "type": "wald_conjugate",
+            "includeOutcomes": ["hit"],
+            "minWindowSize": 10,
+            "maxWindowSize": 40,
+            "t0Mode": "min_rt_multiplier",
+            "t0Multiplier": 0.5,
+            "credibleInterval": { "lower": 0.025, "upper": 0.975 }
+          }
+        ],
+        "transformPersistence": "session"
+      }
+    }
+  },
+
+  "display": {
+    "maxWidthPx": 800,
+    "maxHeightPx": 600,
+    "minWidthPx": 800,
+    "minHeightPx": 600,
+    "aspectRatio": "4/3",
+    "marginPx": 48,
+    "background": "#0a0a0a"
+  },
+
+  "instructions": {
+    "intro": [
+      "Welcome to the Multi-Attribute Task Battery (MATB).",
+      "You will perform three 10-minute blocks. The level of automation changes across blocks.",
+      "SYSMON (top-left): Monitor gauges and lights. When a failure occurs, press the assigned key (F1–F4 for scales, F5–F6 for lights) to acknowledge it.",
+      "TRACKING (top-right): Keep the red cursor inside the circular reticle using the mouse.",
+      "COMMS (bottom-left): Respond to radio prompts when you hear your own callsign.",
+      "RESMAN (bottom-right): Keep tanks A and B near target levels by switching pumps on or off with the number keys.",
+      "SECONDARY TASK — Detection Response Task (DRT): A red border will occasionally flash around the display. Press the Space bar as quickly as possible whenever you see it — while continuing all primary tasks.",
+      "A thin blue bar on the left edge of a panel means that task is currently automated. You do not need to respond to automated tasks.",
+      "When a task is handed over from the computer to you, a brief orange '→ MANUAL' message will appear on that panel.",
+      "Press Continue when you are ready to begin."
+    ],
+    "end": [
+      "The session is now complete.",
+      "Thank you for your participation.",
+      "Please complete the workload questionnaire on the next screen."
+    ]
+  },
+
+  "layout": {
+    "rows": 2,
+    "cols": 3,
+    "gap": "2px",
+    "background": "#d0d0d0",
+    "panels": [
+      { "id": "sysmon",     "row": 0, "col": 0, "label": "SYSTEM MONITORING" },
+      { "id": "tracking",   "row": 0, "col": 1, "label": "TRACKING" },
+      { "id": "scheduling", "row": 0, "col": 2, "label": "SCHEDULING" },
+      { "id": "comms",      "row": 1, "col": 0, "label": "COMMUNICATIONS" },
+      { "id": "resman",     "row": 1, "col": 1, "label": "RESOURCE MANAGEMENT" },
+      { "id": "pumpstatus", "row": 1, "col": 2, "label": "PUMP STATUS" }
+    ]
+  },
+
+  "subtasks": {
+    "sysmon": {
+      "alertTimeoutMs": 10000,
+      "feedbackDurationMs": 1500,
+      "driftIntervalMs": 200,
+      "scales": [
+        { "id": "scale1", "label": "TEMP1", "key": "f1", "driftSpeed": 1 },
+        { "id": "scale2", "label": "PRES1", "key": "f2", "driftSpeed": 1 },
+        { "id": "scale3", "label": "TEMP2", "key": "f3", "driftSpeed": 1 },
+        { "id": "scale4", "label": "PRES2", "key": "f4", "driftSpeed": 1 }
+      ],
+      "lights": [
+        { "id": "light1", "label": "OK",      "onColor": "#22c55e", "offColor": "#555", "defaultOn": true,  "key": "f5" },
+        { "id": "light2", "label": "WARNING", "onColor": "#ef4444", "offColor": "#555", "defaultOn": false, "key": "f6" }
+      ]
+    },
+    "tracking": {
+      "perturbation": {
+        "components": [
+          { "axis": "x", "frequencyHz": 0.06, "amplitude": 140 },
+          { "axis": "y", "frequencyHz": 0.06, "amplitude": 140 }
+        ],
+        "gainRatio": 0.8
+      }
+    },
+    "comms": {
+      "muteAudio": true,
+      "automatedResponseDelayMs": 2500
+    },
+    "resman": {}
+  },
+
+  "waldOverlay": {
+    "enabled": true,
+    "position": "bottom-right",
+    "maxSparklinePoints": 60
+  },
+
+  "adaptive": {
+    "enabled": false,
+    "_comment": "Set enabled:true to activate drift-rate-driven demand adjustment.",
+    "targetDriftRateBand": [2.0, 4.0],
+    "minSampleSize": 15,
+    "adjustmentCooldownMs": 30000,
+    "intervalStepFraction": 0.15,
+    "reliabilityStep": 0.1
+  },
+
+  "plan": {
+    "blocks": [
+      {
+        "label": "full-automation",
+        "blockType": "experimental",
+        "durationMs": 600000,
+
+        "beforeBlockScreens": [
+          "Block 1 of 3 — Full Automation.",
+          "In this block, all four tasks are automated. You only need to respond to DRT probes (red border flash) with the Space bar.",
+          "Each panel with a blue accent bar on its left edge is currently automated.",
+          "Press Continue to begin Block 1."
+        ],
+        "afterBlockScreens": [
+          "Block 1 complete.",
+          "In the next block, SYSMON and RESMAN will be handed back to you. COMMS and TRACKING will remain automated.",
+          "When a task is handed to you, a brief orange message will appear on that panel.",
+          "Press Continue when you are ready for Block 2."
+        ],
+
+        "scenario": {
+          "mode": "dynamic",
+          "seed": 42,
+          "warmupMs": 20000,
+          "cooldownMs": 15000,
+          "maxConcurrentFailures": 2,
+          "sysmon": {
+            "automated": true,
+            "autoResolveDelayMs": 3500,
+            "intervalMs": 28000,
+            "minGapMs": 8000,
+            "reliability": 1.0
+          },
+          "comms": {
+            "automated": true,
+            "muteAudio": true,
+            "automatedResponseDelayMs": 2500,
+            "intervalMs": 38000,
+            "minGapMs": 15000
+          },
+          "resman": {
+            "automated": true,
+            "autoResolveDelayMs": 5000,
+            "intervalMs": 55000,
+            "minGapMs": 15000,
+            "failureDurationMs": 5000,
+            "reliability": 1.0
+          },
+          "tracking": {
+            "automated": true,
+            "automationGain": 0.95
+          }
+        }
+      },
+
+      {
+        "label": "partial-handover",
+        "blockType": "experimental",
+        "durationMs": 600000,
+
+        "beforeBlockScreens": [
+          "Block 2 of 3 — Partial Handover.",
+          "SYSMON and RESMAN are now your responsibility. Watch for failures and respond promptly.",
+          "COMMS and TRACKING remain automated — you do not need to respond to those panels.",
+          "Continue responding to DRT probes (Space bar) throughout.",
+          "Press Continue to begin Block 2."
+        ],
+        "afterBlockScreens": [
+          "Block 2 complete.",
+          "In the final block, all four tasks will be handed back to you — full manual control.",
+          "Press Continue when you are ready for Block 3."
+        ],
+
+        "scenario": {
+          "mode": "dynamic",
+          "seed": 77,
+          "warmupMs": 20000,
+          "cooldownMs": 15000,
+          "maxConcurrentFailures": 2,
+          "sysmon": {
+            "automated": false,
+            "intervalMs": 30000,
+            "minGapMs": 8000,
+            "reliability": 0.0
+          },
+          "comms": {
+            "automated": true,
+            "muteAudio": true,
+            "automatedResponseDelayMs": 2500,
+            "intervalMs": 38000,
+            "minGapMs": 15000
+          },
+          "resman": {
+            "automated": false,
+            "intervalMs": 55000,
+            "minGapMs": 15000,
+            "failureDurationMs": 30000,
+            "reliability": 0.0
+          },
+          "tracking": {
+            "automated": true,
+            "automationGain": 0.95
+          }
+        }
+      },
+
+      {
+        "label": "full-manual",
+        "blockType": "experimental",
+        "durationMs": 600000,
+
+        "beforeBlockScreens": [
+          "Block 3 of 3 — Full Manual.",
+          "All four tasks are now your responsibility.",
+          "Monitor SYSMON for gauge and light failures, keep the TRACKING cursor on target, respond to COMMS radio prompts, and manage RESMAN pump states.",
+          "Continue responding to DRT probes (Space bar) throughout.",
+          "Press Continue to begin Block 3."
+        ],
+
+        "scenario": {
+          "mode": "dynamic",
+          "seed": 99,
+          "warmupMs": 20000,
+          "cooldownMs": 15000,
+          "maxConcurrentFailures": 3,
+          "sysmon": {
+            "automated": false,
+            "intervalMs": 25000,
+            "minGapMs": 8000,
+            "reliability": 0.0
+          },
+          "comms": {
+            "automated": false,
+            "intervalMs": 35000,
+            "minGapMs": 15000
+          },
+          "resman": {
+            "automated": false,
+            "intervalMs": 50000,
+            "minGapMs": 15000,
+            "failureDurationMs": 30000,
+            "reliability": 0.0
+          },
+          "tracking": {
+            "automated": false
+          }
+        }
+      }
+    ]
+  },
+
+  "endSurvey": {
+    "preset": "nasa_tlx",
+    "title": "Workload Assessment",
+    "required": true,
+    "questionBorder": "1px solid #444444",
+    "questionBorderRadius": "0px",
+    "submitButtonStyle": {
+      "background": "#222222",
+      "border": "1px solid #444444",
+      "borderRadius": "0px",
+      "color": "#cccccc",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "padding": "8px 20px",
+      "outline": "none",
+      "boxShadow": "none",
+      "textTransform": "uppercase"
+    }
+  }
+}

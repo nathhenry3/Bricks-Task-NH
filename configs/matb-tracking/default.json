@@ -1,0 +1,66 @@
+{
+  "task": {
+    "title": "MATB Compensatory Tracking"
+  },
+  "instructions": {
+    "intro": [
+      "Keep the cursor dot centred inside the target circle by moving your mouse.",
+      "The cursor will drift — compensate with your mouse to keep it inside.",
+      "Click the display to lock your pointer."
+    ]
+  },
+  "display": {
+    "aperturePx": 400,
+    "frameBackground": "#0f172a",
+    "frameBorder": "#334155",
+    "canvasBackground": "#e2e8f0",
+    "showCrosshair": true
+  },
+  "reticle": {
+    "radiusPx": 50,
+    "strokeColor": "#334155",
+    "strokeWidthPx": 2,
+    "fillColor": "rgba(22, 163, 74, 0.15)"
+  },
+  "cursor": {
+    "radiusPx": 4,
+    "colorInside": "#000000",
+    "colorOutside": "#ef4444"
+  },
+  "trialDefaults": {
+    "durationMs": 60000,
+    "sampleIntervalMs": 16,
+    "binMs": 2000,
+    "storeRawSamples": false,
+    "perturbation": {
+      "components": [
+        { "axis": "x", "frequencyHz": 0.04, "amplitude": 160 },
+        { "axis": "y", "frequencyHz": 0.048, "amplitude": 160 }
+      ],
+      "inputGain": 1.0
+    }
+  },
+  "plan": {
+    "blocks": [
+      {
+        "label": "Practice",
+        "phase": "practice",
+        "trials": 1,
+        "trialDurationMs": 30000,
+        "perturbation": {
+          "components": [
+            { "axis": "x", "frequencyHz": 0.04, "amplitude": 80 },
+            { "axis": "y", "frequencyHz": 0.048, "amplitude": 80 }
+          ],
+          "inputGain": 1.0
+        }
+      },
+      {
+        "label": "Main",
+        "phase": "main",
+        "trials": 3,
+        "trialDurationMs": 60000
+      }
+    ]
+  }
+}

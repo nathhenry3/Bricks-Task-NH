@@ -1,0 +1,247 @@
+{
+  "task": {
+    "implementation": "jspsych_nback",
+    "runner": "jspsych",
+    "title": "NBack PM Images (Nirvana Exp1)",
+    "rtTask": {
+      "enabled": true,
+      "timing": {
+        "trialDurationMs": 5000,
+        "fixationOnsetMs": 0,
+        "fixationDurationMs": 500,
+        "stimulusOnsetMs": 1000,
+        "stimulusDurationMs": 4000,
+        "responseWindowStartMs": 1000,
+        "responseWindowEndMs": 5000
+      },
+      "responseTerminatesTrial": false
+    },
+    "modules": {
+      "injector": {
+        "enabled": true,
+        "injections": [
+          {
+            "id": "pm_targets",
+            "enabled": "$var.pmEnabled",
+            "eligibleTrialTypes": ["F"],
+            "schedule": {
+              "count": "$var.pmCount",
+              "minSeparation": "$var.pmMinSeparation",
+              "maxSeparation": "$var.pmMaxSeparation"
+            },
+            "source": {
+              "type": "category_in",
+              "categories": "$var.pmCategories"
+            },
+            "sourceDraw": {
+              "mode": "without_replacement",
+              "scope": "block",
+              "shuffle": true
+            },
+            "set": {
+              "trialType": "PM",
+              "itemCategory": "PM",
+              "correctResponse": "space",
+              "responseCategory": "pm"
+            }
+          },
+          {
+            "id": "control_targets",
+            "enabled": "$var.controlEnabled",
+            "eligibleTrialTypes": ["F"],
+            "schedule": {
+              "count": "$var.controlCount",
+              "minSeparation": "$var.pmMinSeparation",
+              "maxSeparation": "$var.pmMaxSeparation"
+            },
+            "source": {
+              "type": "category_in",
+              "categories": "$var.controlCategories"
+            },
+            "sourceDraw": {
+              "mode": "without_replacement",
+              "scope": "block",
+              "shuffle": true
+            },
+            "set": {
+              "trialType": "F",
+              "itemCategory": "Control",
+              "correctResponse": "z"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "mapping": {
+    "targetKey": "m",
+    "nonTargetKey": "z"
+  },
+  "instructions": {
+    "introPages": [
+      "Respond M for n-back targets and Z for non-targets.",
+      "In PM blocks, press SPACE for PM-category items."
+    ],
+    "blockIntroTemplate": "$var.blockIntro",
+    "showBlockLabel": true
+  },
+  "display": {
+    "fixationFontSizePx": 24,
+    "fixationFontWeight": 400,
+    "imageWidthPx": 160,
+    "imageHeightPx": 160,
+    "imageUpscale": false
+  },
+  "stimulusPools": {
+    "nbackDraw": {
+      "mode": "without_replacement",
+      "shuffle": true
+    }
+  },
+  "stimuliCsv": {
+    "basePath": "{runtime.assetsBase}/nback-pm-modern",
+    "idColumn": "file",
+    "categories": {
+      "food": "food.csv",
+      "clothing": "clothing.csv",
+      "other": "other.csv"
+    }
+  },
+  "variables": {
+    "between": {
+      "scope": "participant",
+      "sampler": {
+        "type": "list",
+        "values": [
+          { "pm": "food", "control": "clothing" },
+          { "pm": "clothing", "control": "food" }
+        ]
+      }
+    },
+    "mainCondition": {
+      "scope": "block",
+      "sampler": {
+        "type": "list",
+        "values": [
+          {
+            "pmEnabled": true,
+            "controlEnabled": false,
+            "pmCount": 5,
+            "controlCount": 0,
+            "intro": "This is a {nLevel}-back PM block. Watch for: ${between.pm}."
+          },
+          {
+            "pmEnabled": false,
+            "controlEnabled": true,
+            "pmCount": 0,
+            "controlCount": 5,
+            "intro": "This is a {nLevel}-back block."
+          }
+        ],
+        "without_replacement": true
+      }
+    },
+    "mainNLevel": {
+      "scope": "block",
+      "sampler": {
+        "type": "list",
+        "values": [1, 3],
+        "without_replacement": true
+      }
+    },
+    "pmEnabled": false,
+    "controlEnabled": false,
+    "pmCount": 0,
+    "controlCount": 0,
+    "pmCategories": [],
+    "controlCategories": [],
+    "pmMinSeparation": 8,
+    "pmMaxSeparation": 11,
+    "blockIntro": "This is a {nLevel}-back block."
+  },
+  "imageAssets": {
+    "enabled": true,
+    "basePath": "{runtime.assetsBase}/nback-pm-modern/images",
+    "filenameTemplate": "{itemId}{stimulusVariant}-photo-colour.png",
+    "practiceVariant": 3,
+    "mainVariants": [1, 2],
+    "mainMode": "with_replacement"
+  },
+  "nbackRule": {
+    "lureLagPasses": [[4, 5], [6, 7, 8, 9]],
+    "maxInsertionAttempts": 10
+  },
+  "plan": {
+    "manipulations": [
+      {
+        "id": "category_assignment",
+        "overrides": {
+          "variables": {
+            "pmCategories": ["$between.pm"],
+            "controlCategories": ["$between.control"]
+          }
+        }
+      },
+      {
+        "id": "practice_control",
+        "overrides": {
+          "variables": {
+            "pmEnabled": false,
+            "controlEnabled": true,
+            "pmCount": 0,
+            "controlCount": 2,
+            "blockIntro": "This is a {nLevel}-back block."
+          }
+        }
+      },
+      {
+        "id": "practice_pm",
+        "overrides": {
+          "variables": {
+            "pmEnabled": true,
+            "controlEnabled": false,
+            "pmCount": 2,
+            "controlCount": 0,
+            "blockIntro": "This is a {nLevel}-back PM block. Watch for: ${between.pm}."
+          }
+        }
+      },
+      {
+        "id": "main",
+        "overrides": {
+          "nLevel": "$var.mainNLevel",
+          "variables": {
+            "pmEnabled": "$var.mainCondition.pmEnabled",
+            "controlEnabled": "$var.mainCondition.controlEnabled",
+            "pmCount": "$var.mainCondition.pmCount",
+            "controlCount": "$var.mainCondition.controlCount",
+            "blockIntro": "$var.mainCondition.intro"
+          }
+        }
+      },
+      { "id": "nlevel_1", "overrides": { "nLevel": 1 } },
+      { "id": "nlevel_2", "overrides": { "nLevel": 2 } },
+      { "id": "nlevel_3", "overrides": { "nLevel": 3 } }
+    ],
+    "blocks": [
+      { "phase": "practice", "label": "Practice 2-back", "manipulations": ["practice_control", "category_assignment", "nlevel_2"], "trials": 20, "feedback": { "enabled": true } },
+      { "phase": "practice", "label": "Practice 1-back PM", "manipulations": ["practice_pm", "category_assignment", "nlevel_1"], "trials": 20, "feedback": { "enabled": true } },
+      { "phase": "practice", "label": "Practice 3-back", "manipulations": ["practice_control", "category_assignment", "nlevel_3"], "trials": 20, "feedback": { "enabled": true } },
+      { "phase": "main", "label": "Main 1", "manipulations": ["main", "category_assignment"], "trials": 54 },
+      { "phase": "main", "label": "Main 2", "manipulations": ["main", "category_assignment"], "trials": 54 },
+      { "phase": "main", "label": "Main 3", "manipulations": ["main", "category_assignment"], "trials": 54 },
+      { "phase": "main", "label": "Main 4", "manipulations": ["main", "category_assignment"], "trials": 54 }
+    ]
+  },
+  "feedback": {
+    "enabled": false,
+    "style": {
+      "canvasBackground": "#ffffff",
+      "canvasBorder": "2px solid #ddd",
+      "correctColor": "#16a34a",
+      "incorrectColor": "#dc2626",
+      "timeoutColor": "#d97706",
+      "invalidColor": "#d97706"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "task": {
+    "title": "MATB",
+    "durationMs": 480000
+  },
+  "instructions": {
+    "intro": [
+      "Welcome to the Multi-Attribute Task Battery (MATB).",
+      "You will perform four tasks simultaneously for 8 minutes.",
+      "SYSMON (top-left): Monitor lights and scales. Press F1–F4 to correct drifting scales; press F5–F6 to correct indicator light failures.",
+      "TRACKING (top-right): Keep the red cursor inside the central reticle using the mouse. Click the canvas first to lock the cursor.",
+      "COMMS (bottom-left): Listen for radio callouts. If you hear 'NASA five zero four', select the named radio (↑↓) and tune to the announced frequency (←→), then press Enter.",
+      "RESMAN (bottom-right): Keep tanks A and B near 2500 units by toggling pumps with numpad keys 1–8.",
+      "Try to perform all four tasks as accurately as possible throughout the session.",
+      "Press Continue when you are ready to begin."
+    ],
+    "end": [
+      "The MATB session is complete. Thank you."
+    ]
+  },
+  "ui": {
+    "pageBackground": "#0a0a0a",
+    "cardWidth": "800px",
+    "cardMinHeight": "600px",
+    "cardBackground": "#1a1a1a",
+    "cardBorder": "1px solid #444444",
+    "cardBorderRadius": "0px",
+    "cardColor": "#cccccc",
+    "cardFontSize": "1rem",
+    "cardFontFamily": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    "continueButtonStyle": {
+      "background": "#222222",
+      "border": "1px solid #444444",
+      "borderRadius": "0px",
+      "color": "#cccccc",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "padding": "8px 20px",
+      "outline": "none",
+      "boxShadow": "none",
+      "textTransform": "uppercase"
+    }
+  },
+  "layout": {
+    "rows": 2,
+    "cols": 3,
+    "gap": "2px",
+    "background": "#d0d0d0",
+    "panels": [
+      { "id": "sysmon",     "row": 0, "col": 0, "label": "SYSTEM MONITORING" },
+      { "id": "tracking",   "row": 0, "col": 1, "label": "TRACKING" },
+      { "id": "scheduling", "row": 0, "col": 2, "label": "SCHEDULING" },
+      { "id": "comms",      "row": 1, "col": 0, "label": "COMMUNICATIONS" },
+      { "id": "resman",     "row": 1, "col": 1, "label": "RESOURCE MANAGEMENT" },
+      { "id": "pumpstatus", "row": 1, "col": 2, "label": "PUMP STATUS" }
+    ]
+  },
+  "subtasks": {
+    "sysmon": {
+      "lights": [
+        { "id": "light1", "label": "F5", "onColor": "#8edbb0", "offColor": "#ffffff", "defaultOn": true,  "key": "F5" },
+        { "id": "light2", "label": "F6", "onColor": "#e04545", "offColor": "#ffffff", "defaultOn": false, "key": "F6" }
+      ],
+      "scales": [
+        { "id": "scale1", "label": "F1", "key": "F1", "driftSpeed": 1 },
+        { "id": "scale2", "label": "F2", "key": "F2", "driftSpeed": 1 },
+        { "id": "scale3", "label": "F3", "key": "F3", "driftSpeed": 1 },
+        { "id": "scale4", "label": "F4", "key": "F4", "driftSpeed": 1 }
+      ],
+      "alertTimeoutMs": 10000,
+      "feedbackDurationMs": 1500,
+      "driftIntervalMs": 200
+    },
+    "tracking": {
+      "display": {
+        "aperturePx": 400,
+        "showCrosshair": true,
+        "canvasBackground": "#f0f0f0"
+      },
+      "reticle": {
+        "radiusPx": 50,
+        "strokeColor": "#323232"
+      },
+      "cursor": {
+        "radiusPx": 16,
+        "colorInside": "#323232",
+        "colorOutside": "#ef4444"
+      },
+      "perturbation": {
+        "components": [
+          { "axis": "x", "frequencyHz": 0.03, "amplitude": 120 },
+          { "axis": "x", "frequencyHz": 0.07, "amplitude": 84 },
+          { "axis": "y", "frequencyHz": 0.05, "amplitude": 120 },
+          { "axis": "y", "frequencyHz": 0.11, "amplitude": 60 }
+        ],
+        "gainRatio": 0.8
+      },
+      "inputMode": "mouse",
+      "sampleIntervalMs": 50,
+      "binMs": 10000
+    },
+    "comms": {
+      "ownCallsign": "NASA504",
+      "radios": [
+        { "id": "nav1", "label": "NAV1", "defaultFreqMhz": 110.0 },
+        { "id": "nav2", "label": "NAV2", "defaultFreqMhz": 110.0 },
+        { "id": "com1", "label": "COM1", "defaultFreqMhz": 118.0 },
+        { "id": "com2", "label": "COM2", "defaultFreqMhz": 118.0 }
+      ],
+      "frequencyRange": { "minMhz": 108.0, "maxMhz": 137.0, "stepMhz": 0.1 },
+      "responseTimeoutMs": 20000,
+      "speech": {
+        "voiceNames": [
+          "Google UK English Male",
+          "Microsoft David - English (United States)",
+          "Microsoft Mark - English (United States)",
+          "Alex",
+          "Daniel"
+        ],
+        "lang": "en-US",
+        "rate": 0.9,
+        "pitch": 1.0
+      },
+      "keys": {
+        "radioUp":   "ArrowUp",
+        "radioDown": "ArrowDown",
+        "freqUp":    "ArrowRight",
+        "freqDown":  "ArrowLeft",
+        "confirm":   "Enter"
+      }
+    },
+    "resman": {}
+  },
+  "scenario": {
+    "events": [
+      { "timeMs":  30000, "target": "sysmon",  "command": "set", "path": "scale1.failure", "value": true },
+      { "timeMs":  45000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "com1", "frequency": 118.3 } },
+      { "timeMs":  60000, "target": "sysmon",  "command": "set", "path": "light1.failure", "value": true },
+      { "timeMs":  75000, "target": "comms",   "command": "prompt", "value": { "callsign": "DELTA221", "radio": "nav1", "frequency": 110.6 } },
+      { "timeMs":  90000, "target": "resman",  "command": "set", "path": "pump.1.state",   "value": "failed" },
+      { "timeMs": 110000, "target": "sysmon",  "command": "set", "path": "scale3.failure", "value": true },
+      { "timeMs": 120000, "target": "resman",  "command": "set", "path": "pump.1.state",   "value": "off" },
+      { "timeMs": 135000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "nav2", "frequency": 112.1 } },
+      { "timeMs": 150000, "target": "sysmon",  "command": "set", "path": "light2.failure", "value": true },
+      { "timeMs": 165000, "target": "comms",   "command": "prompt", "value": { "callsign": "ECHO775",  "radio": "com2", "frequency": 124.8 } },
+      { "timeMs": 180000, "target": "resman",  "command": "set", "path": "pump.3.state",   "value": "failed" },
+      { "timeMs": 195000, "target": "sysmon",  "command": "set", "path": "scale2.failure", "value": true },
+      { "timeMs": 210000, "target": "resman",  "command": "set", "path": "pump.3.state",   "value": "off" },
+      { "timeMs": 225000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "com2", "frequency": 126.7 } },
+      { "timeMs": 240000, "target": "sysmon",  "command": "set", "path": "scale4.failure", "value": true },
+      { "timeMs": 270000, "target": "comms",   "command": "prompt", "value": { "callsign": "DELTA221", "radio": "com1", "frequency": 119.0 } },
+      { "timeMs": 300000, "target": "sysmon",  "command": "set", "path": "light1.failure", "value": true },
+      { "timeMs": 315000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "nav1", "frequency": 111.4 } },
+      { "timeMs": 330000, "target": "resman",  "command": "set", "path": "pump.5.state",   "value": "failed" },
+      { "timeMs": 350000, "target": "sysmon",  "command": "set", "path": "scale1.failure", "value": true },
+      { "timeMs": 360000, "target": "resman",  "command": "set", "path": "pump.5.state",   "value": "off" },
+      { "timeMs": 375000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "com1", "frequency": 120.5 } },
+      { "timeMs": 400000, "target": "sysmon",  "command": "set", "path": "scale3.failure", "value": true },
+      { "timeMs": 420000, "target": "comms",   "command": "prompt", "value": { "callsign": "ECHO775",  "radio": "nav2", "frequency": 116.2 } },
+      { "timeMs": 440000, "target": "sysmon",  "command": "set", "path": "light2.failure", "value": true },
+      { "timeMs": 460000, "target": "comms",   "command": "prompt", "value": { "callsign": "NASA504",  "radio": "com2", "frequency": 128.9 } }
+    ]
+  }
+}

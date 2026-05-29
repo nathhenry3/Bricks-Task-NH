@@ -1,0 +1,73 @@
+{
+  "task": {
+    "title": "Random Dot Kinetogram"
+  },
+  "instructions": {
+    "intro": [
+      "You will see a field of dots.",
+      "If the dots are moving, determine their predominant direction (Left, Right, Up, Down).",
+      "If the dots are static and colored, determine the predominant color (Black or White)."
+    ]
+  },
+  "display": {
+    "aperturePx": 500,
+    "frameBackground": "#1e293b",
+    "frameBorder": "#334155",
+    "canvasBackground": "#94a3b8",
+    "showCrosshair": true
+  },
+  "trialDefaults": {
+    "mode": "dynamic",
+    "durationMs": 5000,
+    "coherenceStart": 0.5,
+    "coherenceEnd": 0.5,
+    "coherenceDurationMs": 0,
+    "direction": "right",
+    "dotCount": 300,
+    "dotSizePx": 4,
+    "dotColor": "#ffffff",
+    "dotColorAlternate": "#000000",
+    "speedPxPerSec": 100,
+    "responseMaxDurationMs": 5000,
+    "responseKeys": {
+      "left": "ArrowLeft",
+      "right": "ArrowRight",
+      "up": "ArrowUp",
+      "down": "ArrowDown",
+      "black": "f",
+      "white": "j"
+    }
+  },
+  "interTrialIntervalMs": 500,
+  "plan": {
+    "blocks": [
+      {
+        "phase": "main",
+        "label": "Dynamic RDK Block",
+        "trials": 5,
+        "mode": "dynamic",
+        "coherenceStart": 0.0,
+        "coherenceEnd": 0.8,
+        "coherenceDurationMs": 2000,
+        "coherenceFunction": "start + (end - start) * Math.sin((t / 2000) * Math.PI / 2)",
+        "beforeBlockScreens": [
+          "Dynamic RDK Block.",
+          "Press Left or Right arrow keys to indicate direction."
+        ]
+      },
+      {
+        "phase": "main",
+        "label": "Static Color Block",
+        "trials": 5,
+        "mode": "static",
+        "coherenceStart": 0.2,
+        "coherenceEnd": 0.9,
+        "coherenceDurationMs": 1500,
+        "beforeBlockScreens": [
+          "Static Color Block.",
+          "Press F for Black or J for White."
+        ]
+      }
+    ]
+  }
+}

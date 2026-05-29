@@ -1,0 +1,74 @@
+{
+  "task": {
+    "title": "MATB Communications"
+  },
+  "instructions": {
+    "intro": [
+      "Listen to the audio prompts. Each prompt announces a callsign, a radio channel, and a frequency.",
+      "Your callsign is NASA504.",
+      "If you hear your callsign: select the named radio (↑↓), tune to the announced frequency (←→), then press Enter to confirm.",
+      "If you hear a different callsign: do nothing."
+    ]
+  },
+  "comms": {
+    "ownCallsign": "NASA504",
+    "radios": [
+      { "id": "nav1", "label": "NAV1", "defaultFreqMhz": 110.0 },
+      { "id": "nav2", "label": "NAV2", "defaultFreqMhz": 110.0 },
+      { "id": "com1", "label": "COM1", "defaultFreqMhz": 118.0 },
+      { "id": "com2", "label": "COM2", "defaultFreqMhz": 118.0 }
+    ],
+    "frequencyRange": { "minMhz": 108.0, "maxMhz": 137.0, "stepMhz": 0.1 },
+    "responseTimeoutMs": 20000,
+    "speech": {
+      "voiceNames": [
+        "Google UK English Male",
+        "Microsoft David - English (United States)",
+        "Microsoft Mark - English (United States)",
+        "Alex",
+        "Daniel"
+      ],
+      "lang": "en-US",
+      "rate": 0.9,
+      "pitch": 1.0
+    },
+    "keys": {
+      "radioUp":   "ArrowUp",
+      "radioDown": "ArrowDown",
+      "freqUp":    "ArrowRight",
+      "freqDown":  "ArrowLeft",
+      "confirm":   "Enter"
+    }
+  },
+  "trialDefaults": {
+    "durationMs": 120000,
+    "promptSchedule": [
+      { "timeMs":  8000, "callsign": "NASA504",  "radio": "com1", "frequency": 118.3 },
+      { "timeMs": 30000, "callsign": "DELTA221", "radio": "nav1", "frequency": 110.6 },
+      { "timeMs": 50000, "callsign": "NASA504",  "radio": "nav2", "frequency": 112.1 },
+      { "timeMs": 70000, "callsign": "ECHO775",  "radio": "com2", "frequency": 124.8 },
+      { "timeMs": 90000, "callsign": "NASA504",  "radio": "com2", "frequency": 126.7 },
+      { "timeMs": 110000, "callsign": "DELTA221", "radio": "com1", "frequency": 119.0 }
+    ]
+  },
+  "plan": {
+    "blocks": [
+      {
+        "label": "Practice",
+        "phase": "practice",
+        "trials": 1,
+        "trialDurationMs": 60000,
+        "promptSchedule": [
+          { "timeMs":  8000, "callsign": "NASA504",  "radio": "com1", "frequency": 118.3 },
+          { "timeMs": 25000, "callsign": "DELTA221", "radio": "nav1", "frequency": 110.6 },
+          { "timeMs": 45000, "callsign": "NASA504",  "radio": "nav2", "frequency": 112.1 }
+        ]
+      },
+      {
+        "label": "Main",
+        "phase": "main",
+        "trials": 3
+      }
+    ]
+  }
+}

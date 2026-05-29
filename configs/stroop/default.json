@@ -1,0 +1,73 @@
+{
+  "task": {
+    "implementation": "jspsych_stroop",
+    "runner": "jspsych",
+    "title": "Classic Stroop",
+    "instructions": "Respond to font color, not the word meaning.",
+    "rtTask": {
+      "timing": {
+        "trialDurationMs": 2000,
+        "fixationOnsetMs": 0,
+        "fixationDurationMs": 500,
+        "stimulusOnsetMs": 700,
+        "stimulusDurationMs": 1300,
+        "responseWindowStartMs": 700,
+        "responseWindowEndMs": 1700
+      },
+      "responseTerminatesTrial": false,
+      "postResponseContent": "stimulus",
+      "feedbackPhase": "separate"
+    }
+  },
+  "mapping": {
+    "redKey": "f",
+    "greenKey": "j"
+  },
+  "display": {
+    "aperturePx": 440,
+    "frameBackground": "#ffffff",
+    "frameBorder": "2px solid #d1d5db",
+    "fixationColor": "#111827",
+    "stimulusFontSizePx": 58,
+    "stimulusFontWeight": 700,
+    "textColorByToken": {
+      "red": "#ff0000",
+      "green": "#00aa00"
+    }
+  },
+  "stimuli": {
+    "responseColorTokens": ["red", "green"],
+    "words": ["red", "green", "blue"]
+  },
+  "conditions": {
+    "mode": "congruence",
+    "quotaPerBlock": {
+      "congruent": 12,
+      "incongruent": 12,
+      "neutral": 12
+    },
+    "fontColorQuotaPerBlock": {
+      "red": 18,
+      "green": 18
+    },
+    "maxConditionRunLength": 3,
+    "noImmediateWordRepeat": true
+  },
+  "plan": {
+    "blockCount": 2,
+    "blockTemplate": {
+      "label": "Block {blockIndex}",
+      "trials": 36
+    }
+  },
+  "feedback": {
+    "enabled": false,
+    "durationMs": 400,
+    "messages": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "timeout": "Too slow",
+      "invalid": "Invalid"
+    }
+  }
+}
