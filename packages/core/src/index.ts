@@ -17,7 +17,6 @@ export * from "./infrastructure/random";
 export * from "./infrastructure/sampling";
 export * from "./infrastructure/scheduler";
 export * from "./infrastructure/variables";
-export * from "./infrastructure/pools";
 export * from "./infrastructure/participant";
 export * from "./infrastructure/selection";
 export * from "./infrastructure/data";
@@ -29,17 +28,12 @@ export * from "./infrastructure/spatial";
 export * from "./infrastructure/dataSink";
 export * from "./infrastructure/eegBridge";
 export * from "./infrastructure/manipulations";
-export * from "./infrastructure/gamepad";
 
 // Runtime
 export * from "./runtime/sessionRunner";
 export * from "./runtime/runner";
-export * from "./runtime/trialExecution";
 export * from "./runtime/outcome";
-export * from "./runtime/taskHooks";
-export * from "./runtime/responseSemantics";
 export * from "./runtime/autoresponder";
-export * from "./runtime/moduleScopes";
 export * from "./runtime/moduleConfig";
 export * from "./runtime/stimulusExport";
 export * from "./runtime/surveyPlan";
@@ -50,7 +44,6 @@ export * from "./runtime/blockRepeat";
 
 // Stimuli
 export * from "./stimuli/stimulus";
-export * from "./stimuli/semantics";
 
 // Web
 export * from "./web/ui";
@@ -59,9 +52,7 @@ export * from "./web/instructionFlow";
 export * from "./web/taskUiFlow";
 export * from "./web/surveys";
 export * from "./web/experiment";
-export * from "./web/feedback";
 export * from "./web/stimulusExport";
-export * from "./web/panelLayout";
 
 // Utils
 export * from "./utils/coerce";

@@ -1,5 +1,3 @@
-import { normalizeKey } from "../infrastructure/keys";
-
 export interface CorrectnessResult {
   correct: 0 | 1;
   expectedCategory?: string | null;
@@ -48,19 +46,7 @@ export function evaluateTrialOutcome(args: EvaluateTrialOutcomeArgs): TrialOutco
     meta: args.meta,
   };
 
-  let raw = args.evaluator ? args.evaluator(context) : defaultCorrectnessEvaluator(context);
-  
-  // Modular fallback: if not correct semantically, check for literal key match
-  // This is for cases where a module (e.g. PM) has injected a literal response key 
-  // that is not in the host task's semantic mapping.
-  if (isIncorrect(raw)) {
-    const literalKey = String(args.meta?.correctResponse ?? "");
-    const actualKey = String(args.meta?.responseKey ?? "");
-    if (literalKey && actualKey && normalizeKey(literalKey) === normalizeKey(actualKey)) {
-      raw = { correct: 1, expectedCategory: literalKey };
-    }
-  }
-
+  const raw = args.evaluator ? args.evaluator(context) : defaultCorrectnessEvaluator(context);
   const normalized = normalizeCorrectnessResult(raw, expectedCategory);
 
   return {
@@ -95,10 +81,4 @@ function normalizeCorrectnessResult(
     expectedCategory: value.expectedCategory ?? fallbackExpectedCategory,
     subtaskCorrect: value.subtaskCorrect,
   };
-}
-
-function isIncorrect(result: CorrectnessResult | boolean | number): boolean {
-  if (typeof result === "boolean") return !result;
-  if (typeof result === "number") return result !== 1;
-  return result.correct !== 1;
 }
