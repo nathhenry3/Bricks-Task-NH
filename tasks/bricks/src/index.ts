@@ -424,7 +424,35 @@ async function runBricksTask(context: TaskAdapterContext): Promise<unknown> {
     },
     csvOptions: {
       suffix: "bricks_events",
-      getRecords: () => [],
+      getRecords: (sessionResult: any) => {
+        const trialRows = sessionResult.blocks.flatMap((b: any) => b.trialResults) as ConveyorTrialData[];
+        const ids = { participantId: selection.participant.participantId };
+        const out: Array<Record<string, string | number | boolean | null>> = [];
+        for (const row of trialRows) {
+          const trialContext = buildTrialCsvContext(row, blockPlan, ids);
+          const timeline = Array.isArray((row as any).timeline_events)
+            ? ((row as any).timeline_events as Array<Record<string, unknown>>)
+            : [];
+          let hudPoints: number | null = null;
+          timeline.forEach((event, eventIndex) => {
+            const type = typeof event.type === "string" ? event.type : null;
+            if (!type) return;
+            const cumulativePoints = Number(event.cumulative_points ?? NaN);
+            if (Number.isFinite(cumulativePoints)) hudPoints = cumulativePoints;
+            const flat: Record<string, string | number | boolean | null> = {
+              ...trialContext,
+              event_index: eventIndex,
+              time_ms: Number(event.time ?? event.time_ms ?? eventIndex),
+              event_type: type,
+              hud_points: hudPoints,
+            };
+            const cleanedEvent = pruneEmptyUnknown(event);
+            if (cleanedEvent !== undefined) flattenUnknown(cleanedEvent, "", flat);
+            out.push(flat);
+          });
+        }
+        return out;
+      },
       getExtraCsvs: ({ sessionResult }) => {
         const trialRows = sessionResult.blocks.flatMap((b: any) => b.trialResults) as ConveyorTrialData[];
         const ids = { participantId: selection.participant.participantId };

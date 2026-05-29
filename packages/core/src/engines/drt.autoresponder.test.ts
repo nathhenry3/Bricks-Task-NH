@@ -178,14 +178,21 @@ describe("DrtController autoresponder integration", () => {
       { scope: "block", blockIndex: 0, trialIndex: null },
       { participantId: "p1", sessionId: "s1", configPath: "configs/bricks/evanderHons.json", taskId: "bricks" },
     ).stop();
-    const firstSize = Number(first.responseRows.at(-1)?.transformColumns?.transform_sample_size ?? 0);
+    // Forced-end boundary events produce null estimates; find the last row with a real estimate.
+    const firstSize = Number(
+      first.responseRows.findLast(r => typeof r.transformColumns?.transform_sample_size === "number")
+        ?.transformColumns?.transform_sample_size ?? 0
+    );
 
     const second = module.start(
       config,
       { scope: "block", blockIndex: 1, trialIndex: null },
       { participantId: "p1", sessionId: "s1", configPath: "configs/bricks/evanderHons.json", taskId: "bricks" },
     ).stop();
-    const secondSize = Number(second.responseRows.at(-1)?.transformColumns?.transform_sample_size ?? 0);
+    const secondSize = Number(
+      second.responseRows.findLast(r => typeof r.transformColumns?.transform_sample_size === "number")
+        ?.transformColumns?.transform_sample_size ?? 0
+    );
 
     expect(firstSize).toBeGreaterThan(0);
     expect(secondSize).toBeGreaterThan(firstSize);
