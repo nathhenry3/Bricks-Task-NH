@@ -89,7 +89,7 @@ http://localhost:5173/?task=nback&config=nback/default&exportStimuli=true
 | :--- | :--- | :--- |
 | `sft` | `default`, `staircase_example` | Signal-to-Fade (DotsExp) |
 | `nback` | `default`, `pm_module_demo`, `drt_block_demo`, `pm_module_export_demo`, `nirvanaExp1`, `annikaHons` | N-Back with optional PM/DRT modules |
-| `bricks` | `baseline`, `spotlight`, `evanderHons`, `moray1991`, `continuousSpawn`, `pizza`, `drt_block_demo`, and more | Conveyor / Bricks task |
+| `bricks` | `baseline`, `spotlight`, `evanderHons`, `Henry1`, `moray1991`, `continuousSpawn`, `pizza`, `drt_block_demo`, and more | Conveyor / Bricks task |
 | `stroop` | `default`, `arbitrary_words`, `emotional_valence` | Stroop colour-word task |
 | `tracking` | `default`, `drt_demo`, `mot_demo` | Continuous mouse-tracking / MOT |
 | `change_detection` | `default` | Visual change detection |
