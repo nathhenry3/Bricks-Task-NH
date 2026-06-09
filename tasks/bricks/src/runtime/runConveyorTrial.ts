@@ -20,6 +20,7 @@ import { estimateTrialDifficulty } from './difficulty_estimator.js';
 import { applyDisplayPreset, resolveDisplayPresetId } from './display_presets.js';
 import type { BricksScopedDrtConfig } from './drtConfig.js';
 import { resolveBricksDrtConfig } from './drtConfig.js';
+import { resolveEmbeddedTaskConfig, runEmbeddedTask } from './embedded_tasks.js';
 
 export interface ConveyorTrialRunArgs {
   displayElement: HTMLElement;
@@ -219,8 +220,31 @@ export async function runConveyorTrial(args: ConveyorTrialRunArgs): Promise<Conv
           const candidate = (focusId ? activeBricks.find((b) => b.id === focusId) : null)
             ?? activeBricks[Math.floor(gameState.rng.nextFloat() * activeBricks.length)]
             ?? activeBricks[0];
-          const holdDurationMs = sampleAutoHoldDurationMs() ?? 500;
-          gameState.handleBrickHold(String(candidate.id), holdDurationMs, gameState.elapsed, { x: 0, y: 0 });
+          if (resolvedCfg.bricks?.completionMode === 'task_sequence') {
+            const { taskId, taskConfig } = resolveEmbeddedTaskConfig(resolvedCfg);
+            const started = gameState.startBrickTaskSequence(String(candidate.id), taskId, String(taskConfig.type ?? 'sternberg'), gameState.elapsed, { x: 0, y: 0 });
+            if (started?.ok) {
+              gameState.handleBrickTaskCompletion(String(candidate.id), {
+                taskId,
+                taskType: String(taskConfig.type ?? 'sternberg'),
+                correct: true,
+                response: 'ArrowRight',
+                expectedResponse: 'ArrowRight',
+                reactionTimeMs: 0,
+                payload: {
+                  task_id: taskId,
+                  task_type: String(taskConfig.type ?? 'sternberg'),
+                  response: 'ArrowRight',
+                  expected_response: 'ArrowRight',
+                  correct: true,
+                  autoresponder: true,
+                }
+              }, gameState.elapsed);
+            }
+          } else {
+            const holdDurationMs = sampleAutoHoldDurationMs() ?? 500;
+            gameState.handleBrickHold(String(candidate.id), holdDurationMs, gameState.elapsed, { x: 0, y: 0 });
+          }
         }
         nextAutoActionAt = gameState.elapsed + Math.max(40, sampleAutoInteractionDelayMs() ?? interactionDelayFallbackMs);
       }
@@ -267,8 +291,43 @@ export async function runConveyorTrial(args: ConveyorTrialRunArgs): Promise<Conv
     };
   }
 
+
+  let activeEmbeddedTask = false;
+  const launchEmbeddedTaskForBrick = (brickId: string, x: number, y: number) => {
+    if (activeEmbeddedTask || ended) return;
+    const { taskId, taskConfig } = resolveEmbeddedTaskConfig(resolvedCfg);
+    const taskType = String(taskConfig.type ?? 'sternberg');
+    const started = gameState.startBrickTaskSequence(brickId, taskId, taskType, gameState.elapsed, { x, y });
+    if (!started?.ok) return;
+    activeEmbeddedTask = true;
+    runEmbeddedTask({
+      container,
+      taskId,
+      taskConfig,
+      rng: gameState.rng,
+      autoRespond: autoEnabled,
+      autoResponder: {
+        ...(resolvedCfg?.autoresponder || {}),
+        ...(autoProfile || {}),
+      },
+      now: () => gameState.elapsed,
+    }).then((result) => {
+      if (!ended) {
+        gameState.handleBrickTaskCompletion(brickId, result, gameState.elapsed);
+      }
+    }).catch((error) => {
+      console.warn('Embedded Bricks task failed:', error);
+    }).finally(() => {
+      activeEmbeddedTask = false;
+    });
+  };
+
   const renderer = new ConveyorRenderer(resolvedCfg, {
     onBrickClick: (brickId: string, x: number, y: number) => {
+      if (resolvedCfg.bricks?.completionMode === 'task_sequence') {
+        launchEmbeddedTaskForBrick(brickId, x, y);
+        return;
+      }
       gameState.handleBrickInteraction(brickId, gameState.elapsed, { x, y });
     },
     onBrickHold: (brickId: string, holdDurationMs: number, x: number, y: number) => {
@@ -614,12 +673,16 @@ export async function runConveyorTrial(args: ConveyorTrialRunArgs): Promise<Conv
             const candidate = (focusId ? activeBricks.find((b) => b.id === focusId) : null)
               ?? activeBricks[Math.floor(gameState.rng.nextFloat() * activeBricks.length)]
               ?? activeBricks[0];
-            const holdDurationMs = sampleAutoHoldDurationMs() ?? 500;
             const point = candidate?.sprite ?? { x: 0, y: 0 };
-            gameState.handleBrickHold(String(candidate.id), holdDurationMs, gameState.elapsed, {
-              x: Number(point.x ?? 0),
-              y: Number(point.y ?? 0),
-            });
+            if (resolvedCfg.bricks?.completionMode === 'task_sequence') {
+              launchEmbeddedTaskForBrick(String(candidate.id), Number(point.x ?? 0), Number(point.y ?? 0));
+            } else {
+              const holdDurationMs = sampleAutoHoldDurationMs() ?? 500;
+              gameState.handleBrickHold(String(candidate.id), holdDurationMs, gameState.elapsed, {
+                x: Number(point.x ?? 0),
+                y: Number(point.y ?? 0),
+              });
+            }
           }
           const interActionDelayMs = sampleAutoInteractionDelayMs() ?? 900;
           nextAutoActionAt = gameState.elapsed + Math.max(40, interActionDelayMs);

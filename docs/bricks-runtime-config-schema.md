@@ -536,7 +536,7 @@ Built-in conveyor procedural style IDs (`display.beltTexture.style`):
 
 ```ts
 {
-  completionMode: "single_click" | "multi_click" | "hold_duration" | "hover_to_clear" | "hold_to_clear" | string;
+  completionMode: "single_click" | "multi_click" | "hold_duration" | "hover_to_clear" | "hold_to_clear" | "task_sequence" | string;
   completionParams?: {
     clicks_required?: number;        // multi_click
     target_hold_ms?: number;         // hold_duration
@@ -546,9 +546,28 @@ Built-in conveyor procedural style IDs (`display.beltTexture.style`):
     overshoot_tolerance_ms?: number; // hold_duration
     width_scaling?: boolean;         // hold_duration
     width_reference_px?: number;     // hold_duration
-    width_scaling_exponent?: number; // hold_duration
+    width_scaling_exponent?: number; // hold_duration/task_sequence
     hover_process_rate_px_s?: number;// hover_to_clear; if unset, uses runtime `brick.speed`
     hold_process_rate_px_s?: number; // hold_to_clear; if unset, uses runtime `brick.speed`
+    taskId?: string;                 // task_sequence; key into embeddedTasks
+    progress_per_correct?: number;   // task_sequence; progress added by a correct embedded-task response
+  };
+
+  embeddedTasks?: {
+    [taskId: string]: {
+      type: "sternberg" | string;
+      title?: string;
+      letters?: string[];
+      memorySetSize?: number;
+      probePresentProbability?: number;
+      memoryDurationMs?: number;
+      retentionDelayMs?: number;
+      feedbackDurationMs?: number;
+      responseKeys?: { present?: string; absent?: string };
+      keyReminder?: string;
+      promptText?: string;
+      showInstructions?: boolean;
+    };
   };
 
   maxBricksPerTrial?: number;
@@ -682,6 +701,11 @@ Each field can be:
   shuffle?: boolean;
 }
 ```
+
+`bricks.completionMode: "task_sequence"` behavior:
+- A valid brick interaction launches `bricks.embeddedTasks[completionParams.taskId]` in a modal overlay while conveyor motion and the trial clock continue.
+- Correct embedded-task responses add `progress_per_correct` progress, optionally width-scaled by `width_scaling`, `width_reference_px`, and `width_scaling_exponent`; incorrect responses are logged and add zero progress.
+- The built-in `sternberg` embedded task uses letter memory sets, a delayed probe, configurable response keys, and a brief non-blocking feedback interval.
 
 ## 4.4 `drt`
 

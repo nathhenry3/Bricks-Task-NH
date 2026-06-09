@@ -165,3 +165,77 @@ describe('GameState drop accounting', () => {
     expect(Number(drops[0]?.lostPoints ?? NaN)).toBe(4);
   });
 });
+
+
+describe('GameState task_sequence dynamics', () => {
+  it('shrinks progress only after correct embedded task responses', () => {
+    const cfg: any = buildConfig();
+    cfg.bricks.completionMode = 'task_sequence';
+    cfg.bricks.completionParams = {
+      taskId: 'sternberg_task',
+      progress_per_correct: 0.5,
+      width_scaling: true,
+      width_reference_px: 100,
+      width_scaling_exponent: 1,
+    };
+    cfg.bricks.embeddedTasks = {
+      sternberg_task: { type: 'sternberg' },
+    };
+    const gameState: any = new GameState(cfg, { seed: 17 });
+    const brick: any = Array.from(gameState.bricks.values())[0];
+
+    const started = gameState.startBrickTaskSequence(brick.id, 'sternberg_task', 'sternberg', gameState.elapsed, { x: brick.x, y: brick.y });
+    expect(started.ok).toBe(true);
+
+    gameState.handleBrickTaskCompletion(brick.id, {
+      taskId: 'sternberg_task',
+      taskType: 'sternberg',
+      correct: false,
+      payload: { response: 'ArrowLeft', expected_response: 'ArrowRight', correct: false },
+    }, gameState.elapsed);
+    expect(gameState.bricks.get(brick.id).clearProgress).toBe(0);
+
+    gameState.handleBrickTaskCompletion(brick.id, {
+      taskId: 'sternberg_task',
+      taskType: 'sternberg',
+      correct: true,
+      payload: { response: 'ArrowRight', expected_response: 'ArrowRight', correct: true },
+    }, gameState.elapsed);
+    expect(gameState.bricks.get(brick.id).clearProgress).toBeCloseTo(0.5, 6);
+
+    gameState.handleBrickTaskCompletion(brick.id, {
+      taskId: 'sternberg_task',
+      taskType: 'sternberg',
+      correct: true,
+      payload: { response: 'ArrowRight', expected_response: 'ArrowRight', correct: true },
+    }, gameState.elapsed);
+    expect(gameState.bricks.has(brick.id)).toBe(false);
+    expect(gameState.stats.cleared).toBe(1);
+
+    const taskEvents = gameState.events.filter((event: any) => event.type === 'embedded_task_response');
+    expect(taskEvents).toHaveLength(3);
+  });
+
+  it('moves active task_sequence bricks when conveyor speed is non-zero', () => {
+    const cfg: any = buildConfig();
+    cfg.bricks.completionMode = 'task_sequence';
+    cfg.bricks.completionParams = {
+      taskId: 'sternberg_task',
+      progress_per_correct: 0.5,
+    };
+    cfg.bricks.embeddedTasks = {
+      sternberg_task: { type: 'sternberg' },
+    };
+    cfg.conveyors.speedPxPerSec = { type: 'fixed', value: 5 };
+
+    const gameState: any = new GameState(cfg, { seed: 23 });
+    const brick: any = Array.from(gameState.bricks.values())[0];
+    const initialX = brick.x;
+
+    gameState.step(1000);
+
+    const moved: any = gameState.bricks.get(brick.id);
+    expect(moved).toBeTruthy();
+    expect(moved.x).toBeCloseTo(initialX + 5, 6);
+  });
+});
