@@ -24,7 +24,7 @@ export const getBrickVisibleWidth = (brick, completionMode) => {
   if (baseWidth <= 0) {
     return 0;
   }
-  if (completionMode === 'hover_to_clear' || completionMode === 'hold_duration' || completionMode === 'hold_to_clear' || completionMode === 'click_to_clear') {
+  if (completionMode === 'hover_to_clear' || completionMode === 'hold_duration' || completionMode === 'hold_to_clear' || completionMode === 'click_to_clear' || completionMode === 'task_sequence') {
     const progress = Math.max(0, Math.min(1, Number(brick?.clearProgress ?? 0) || 0));
     return Math.max(0, baseWidth * (1 - progress));
   }
