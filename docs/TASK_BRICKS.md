@@ -134,6 +134,13 @@ Completion-mode note (`hold_duration`):
 - Optional `completionParams.hold_floor_ms` applies a low-end floor.
 - Holds shorter than this floor contribute zero progress, while overshoot still respects `completionParams.overshoot_tolerance_ms`.
 
+Completion-mode note (`task_sequence`):
+- A valid brick click launches the configured embedded task (`completionParams.taskId`) as a modal overlay above the conveyor.
+- The conveyor clock and belt motion continue while the modal is active, but another embedded task cannot be launched until the active one resolves.
+- Correct embedded-task responses add `completionParams.progress_per_correct` progress, with the same optional width scaling fields used by progress-based modes (`width_scaling`, `width_reference_px`, `width_scaling_exponent`). Incorrect responses are logged and receive brief feedback but add no progress.
+- Embedded tasks are configured under `bricks.embeddedTasks`; the first built-in type is `sternberg`, which displays letter memory sets and supports configurable response keys, memory duration, retention delay, and feedback duration.
+- The progress pathway is mode-neutral: replacing the Sternberg entry with another embedded task type should only require a new embedded-task runner that returns a `{ correct }` result, not new brick scoring code.
+
 Interaction targeting note:
 - Default targeting is direct brick hit-testing.
 - Preferred selector is `bricks.interaction.targetingArea`:

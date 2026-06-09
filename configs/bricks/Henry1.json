@@ -16,16 +16,13 @@
       "enable": true,
       "showCoinAnimation": true
     },
-    "completionMode": "hold_duration",
+    "completionMode": "task_sequence",
     "interaction": {
       "targetingArea": "spotlight"
     },
     "completionParams": {
-      "target_hold_ms": 1000,
-      "hold_floor_ms": 200,
-      "hold_ceiling_ms": 1800,
-      "progress_per_perfect": 0.25,
-      "progress_curve": 2,
+      "taskId": "sternberg_task",
+      "progress_per_correct": 0.5,
       "width_scaling": true,
       "width_reference_px": 50,
       "width_scaling_exponent": 1
@@ -120,11 +117,52 @@
       "minSpacingPx": 0,
       "byConveyor": true,
       "maxActivePerConveyor": 1
+    },
+    "embeddedTasks": {
+      "sternberg_task": {
+        "type": "sternberg",
+        "title": "Memory task",
+        "letters": [
+          "B",
+          "C",
+          "D",
+          "F",
+          "G",
+          "H",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z"
+        ],
+        "memorySetSize": 4,
+        "probePresentProbability": 0.5,
+        "memoryDurationMs": 2200,
+        "retentionDelayMs": 500,
+        "feedbackDurationMs": 350,
+        "responseKeys": {
+          "present": "ArrowRight",
+          "absent": "ArrowLeft"
+        },
+        "keyReminder": "\u2190 No, not in set     Yes, in set \u2192",
+        "promptText": "Remember the letters, then press the right arrow if the probe was in the set or the left arrow if it was not."
+      }
     }
   },
   "difficultyModel": {
-    "holdQualityMean": 0.75,
-    "avgClickIntervalMs": 125
+    "avgClickIntervalMs": 125,
+    "embeddedTaskResponseMs": 1200,
+    "embeddedTaskAccuracy": 0.95
   },
   "trial": {
     "mode": "max_bricks",
@@ -192,7 +230,12 @@
         "title": "",
         "questionsLayout": "grid",
         "showSubscaleLabels": false,
-        "subscales": ["mental_demand", "temporal_demand","effort", "frustration"],
+        "subscales": [
+          "mental_demand",
+          "temporal_demand",
+          "effort",
+          "frustration"
+        ],
         "showValue": true
       }
     ]
@@ -206,12 +249,11 @@
       "minMs": 40,
       "maxMs": 140
     },
-    "holdDurationMs": {
-        "distribution": "normal",
-        "meanMs": 920,
-        "sdMs": 250,
-        "truncate": false
-      }
+    "embeddedTaskResponseDelayMs": {
+      "minMs": 700,
+      "maxMs": 1300
+    },
+    "embeddedTaskAccuracy": 1
   },
   "variables": {
     "between": {
@@ -221,15 +263,15 @@
         "values": [
           {
             "cell1Label": "Low",
-            "cell1SpeedPxPerSec": 16,
+            "cell1SpeedPxPerSec": 8,
             "cell2Label": "High",
-            "cell2SpeedPxPerSec": 20
+            "cell2SpeedPxPerSec": 10
           },
           {
             "cell1Label": "High",
-            "cell1SpeedPxPerSec": 20,
+            "cell1SpeedPxPerSec": 10,
             "cell2Label": "Low",
-            "cell2SpeedPxPerSec": 16
+            "cell2SpeedPxPerSec": 8
           }
         ]
       }
@@ -243,7 +285,7 @@
         "conveyors": {
           "speedPxPerSec": {
             "type": "fixed",
-            "value": 10
+            "value": 5
           }
         }
       }
@@ -255,7 +297,7 @@
         "conveyors": {
           "speedPxPerSec": {
             "type": "fixed",
-            "value": 14
+            "value": 7
           }
         }
       }
@@ -423,7 +465,7 @@
   ],
   "blocks": [
     {
-      "label": "HoldDurationPractice",
+      "label": "SternbergTaskPractice",
       "phase": "practice",
       "showBetweenBlockSummary": false,
       "trials": 1,
@@ -435,28 +477,48 @@
             }
           }
         },
-        "display": {
-          "practiceFeedback": {
-            "bins": [
-              { "max": -0.15, "color": "#D71B60" },
-              { "min": -0.15, "max": 0.15, "color": "#05FE04" },
-              { "min": 0.15, "color": "#0072B2" }
-            ],
-            "showHoldProgressCircle": true,
-            "holdProgressCircleRadius": 40,
-            "holdProgressCircleThickness": 6,
-            "holdProgressCircleColor": "#FAFAD2",
-            "holdProgressCircleColorOvertime": "#0072B2",
-            "holdProgressCircleBgAlpha": 0.1
-          },
-         "performance": {
-             "pixelSnapBricks": true
-         }
-        },
-        "surveys": {
-          "postTrial": []
-        },
         "bricks": {
+          "embeddedTasks": {
+            "sternberg_task": {
+              "type": "sternberg",
+              "title": "Memory task",
+              "letters": [
+                "B",
+                "C",
+                "D",
+                "F",
+                "G",
+                "H",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "P",
+                "Q",
+                "R",
+                "S",
+                "T",
+                "V",
+                "W",
+                "X",
+                "Y",
+                "Z"
+              ],
+              "memorySetSize": 4,
+              "probePresentProbability": 0.5,
+              "memoryDurationMs": 2200,
+              "retentionDelayMs": 500,
+              "feedbackDurationMs": 650,
+              "responseKeys": {
+                "present": "ArrowRight",
+                "absent": "ArrowLeft"
+              },
+              "keyReminder": "\u2190 No, not in set     Yes, in set \u2192",
+              "promptText": "Remember the letters, then press the right arrow if the probe was in the set or the left arrow if it was not.",
+              "showInstructions": true
+            }
+          },
           "forcedSet": [
             {
               "conveyorIndex": 0,
@@ -466,39 +528,47 @@
             }
           ]
         },
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": 0
+          }
+        },
+        "display": {
+          "performance": {
+            "pixelSnapBricks": true
+          }
+        },
+        "surveys": {
+          "postTrial": []
+        },
         "trial": {
           "mode": "max_bricks",
-          "holdDurationPractice": {
-            "requiredPresses": 20,
-            "fullWidthConveyor": true,
-            "centerBrick": false,
-            "hideHud": true,
-            "replenishDelayMs": 250,
-            "useSpotlightWindow": true
+          "forcedOrder": {
+            "enable": true
           }
         }
       },
       "preBlockScreens": [
-         "First, we will practice estimating the time you need to click-and-hold. On the following screen, try to click-and-hold on the box for exactly {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second), and then release it.\n\nAs you hold the button, a circle will fill. It will be completely full at exactly {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second). \n\nAfter you release the mouse button you will see the actual time, in miliseconds, that you held for.\n\nThe feedback will be green if you were close to the target time of {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second).\n\nIf the feedback is red, you were too fast.\nIf the feedback is blue, you were too slow.\n\nThe block will end after you make 20 clicks."
+        "First, we will practice the memory task that opens boxes.\n\nA small set of letters will appear. Remember them. After a short pause, one probe letter will appear.\n\nPress the RIGHT ARROW key if the probe letter was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).\n\nPlease place your right finger on the right arrow key and your left finger on the left arrow key.\n\nEach correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks."
       ],
       "repeatAfterBlockScreens": [
-        "Remember:\nIf the feedback is red, you were too fast.\nIf the feedback is blue, you were too slow.\n\nPress continue when you are ready for the next set of trials."
+        "Remember: right arrow means YES, the probe was in the set. Left arrow means NO, the probe was not in the set.\n\nCorrect responses shrink the highlighted box. Incorrect responses do not. Press continue when you are ready for the next set of trials."
       ],
       "repeatUntil": {
         "enabled": true,
         "maxAttempts": 3,
-        "minTotal": 20,
-        "maxMeanMetric": 0.25,
+        "minMeanMetric": 1,
         "metrics": {
-          "correctField": "practice_press_results",
-          "metricField": "performance_deltas"
+          "correctField": "game.stats.cleared",
+          "metricField": "game.stats.cleared"
         }
       }
     },
     {
       "label": "Practice1",
       "phase": "practice",
-      "trials": 2,
+      "trials": 1,
       "overrides": {
         "task": {
           "modules": {
@@ -507,38 +577,32 @@
             }
           }
         },
-        "display": {
-          "practiceFeedback": {
-            "showHoldProgressCircle": true,
-            "holdProgressCircleRadius": 40,
-            "holdProgressCircleThickness": 6,
-            "holdProgressCircleColor": "#FAFAD2",
-            "holdProgressCircleColorOvertime": "#0072B2",
-            "holdProgressCircleBgAlpha": 0.05
-          }
-        },
+        "display": {},
         "surveys": {
           "postTrial": []
         }
       },
       "repeatUntil": {
-          "enabled": true,
-          "maxAttempts": 3,
-          "minMeanMetric": 3,
-          "metrics": {
-            "correctField": "game.stats.cleared",
-            "metricField": "game.stats.cleared"
-          }
+        "enabled": true,
+        "maxAttempts": 3,
+        "minMeanMetric": 3,
+        "metrics": {
+          "correctField": "game.stats.cleared",
+          "metricField": "game.stats.cleared"
+        }
       },
       "repeatAfterBlockScreens": [
-        "Let's have another try.\nRemember: you must click and hold inside the highlighted area as many times as required until the box opens. Do this for each box in turn until all boxes have been opened.\n\nHolding for closer to {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second) will clear more of the box.\n"
+        "Let's have another try.\nRemember: click the highlighted box to start a memory task. Each correct memory response shrinks that box by one step. Keep completing memory tasks until each highlighted box opens.\n"
       ],
       "manipulations": [
         "difficulty_practice",
         "condition_plan"
       ],
       "preBlockScreens": [
-        {"html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Great work!<p><img src='assets/evander-bricks/sprite/boxy_cheer.png' alt='Boxy Cheering' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Now, we will use this same click-and-hold strategy to open some boxes! In the following trials, boxes will move slowly along the conveyor belts. You must click-and-hold for {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second) several times on each box, until it opens. The wider the box, the more work it takes to open. You will still receive feedback on your clicks, but we will no longer show the exact durations.</p>You can only open the box that Boxy has currently highlighted. Once you clear a box, Boxy will highlight another random box for you to work on. Open as many boxes as possible before they are destroyed to maximise your coins!</p>"},"In the following block there will be two rounds.\nOne round is a full conveyor trial with multiple boxes."
+        {
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Great work!<p><img src='assets/evander-bricks/sprite/boxy_cheer.png' alt='Boxy Cheering' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Now, we will use the memory task to open some boxes! In the following trials, boxes will move slowly along the conveyor belts. Click the highlighted box to start a memory task. Correct memory responses shrink the highlighted box by one step; incorrect responses do not shrink it. Wider boxes require more correct memory tasks to open.</p><p>You can only open the box that Boxy has currently highlighted. Once you clear a box, Boxy will highlight another box for you to work on. Open as many boxes as possible before they are destroyed to maximise your coins!</p></div>"
+        },
+        "In the following block there will be one round: a full conveyor trial with multiple boxes."
       ],
       "afterBlockScreens": [
         {
@@ -591,45 +655,52 @@
         }
       },
       "preBlockScreens": [
-        "Let's practice the DRT.\nIgnore the conveyor and focus only on the red border signal.\n\nPress SPACEBAR as quickly as possible whenever the border flashes red.\n\nThis block will end after 60 seconds.\n\nWe recommend resting your finger on the SPACEBAR so you can press it quickly without moving your hand.\n\nIn the following block there will be eight rounds."
+        "Let's practice the DRT.\nIgnore the conveyor and focus only on the red border signal.\n\nPress SPACEBAR as quickly as possible whenever the border flashes red.\n\nThis block will end after 60 seconds.\n\nWe recommend resting your finger on the SPACEBAR so you can press it quickly without moving your hand.\n\nIn the following block there will be two rounds."
       ],
       "afterBlockScreens": [
-          {"html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Great job!<p><img src='assets/evander-bricks/sprite/boxy_with_coin.png' alt='Boxy With Coin' style='max-height: 120px; height: 100%; width: auto;'/></p><p>We will now do some practice trials putting both tasks together. Use your mouse to click-and-hold on the highlighted box for {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second) several times until it opens, and rest a finger from the other hand on the SPACEBAR. Press the SPACEBAR whenever you see the red border flash, as quickly as you can while still opening the boxes</p><p>It might feel a little tricky to do both tasks at first but we will have several rounds of practice to familiarise you with the responses. The feedback circle will no longer appear, but you will continue to see coloured feedback throughout the experiment. Boxy believes in you!</p>"}
+        {
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Great job!<p><img src='assets/evander-bricks/sprite/boxy_with_coin.png' alt='Boxy With Coin' style='max-height: 120px; height: 100%; width: auto;'/></p><p>We will now do some practice trials putting both tasks together. Use your mouse to click the highlighted box and complete the memory task, and rest a finger from the other hand on the SPACEBAR. Press the SPACEBAR whenever you see the red border flash, as quickly as you can while still opening the boxes.</p><p>It might feel a little tricky to do both tasks at first, but we will have several rounds of practice to familiarise you with the responses. Boxy believes in you!</p></div>"
+        }
       ]
     },
     {
       "label": "Practice2",
       "phase": "practice",
-      "trials": 4,
+      "trials": 2,
       "manipulations": [
         "difficulty_practice2",
         "condition_plan"
       ],
       "overrides": {
-          "surveys": {
+        "surveys": {
           "postTrial": []
         }
       },
       "afterBlockScreens": [
-         {"html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Well done!<p><img src='assets/evander-bricks/sprite/boxy_point.png' alt='Boxy Pointing' style='max-height: 120px; height: 100%; width: auto;'/></p><p>From here on you will always complete both the detection task and the conveyor task. The conveyor will change speeds between blocks and sometimes it will be difficult to open all the boxes. You will continue to receive colour-coded feedback on your clicks. Please try your best to open as many boxes as you can within the time limit!</p><p>Remember: Opening boxes gives you coins, but boxes being destroyed results in coins being taken away!</p>"},{"html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>After each round, you will also be asked to rate some aspects of your workload and performance on the task. Please carefully read each question, as they ask different things. We encourage you to use the full scale range as the experiment progresses."}
+        {
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Well done!<p><img src='assets/evander-bricks/sprite/boxy_point.png' alt='Boxy Pointing' style='max-height: 120px; height: 100%; width: auto;'/></p><p>From here on you will always complete both the detection task and the conveyor task. The conveyor will change speeds between blocks and sometimes it will be difficult to open all the boxes. Click highlighted boxes to start memory tasks; correct memory responses shrink boxes. Please try your best to open as many boxes as you can within the time limit!</p><p>Remember: Opening boxes gives you coins, but boxes being destroyed results in coins being taken away!</p></div>"
+        },
+        {
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>After each round, you will also be asked to rate some aspects of your workload and performance on the task. Please carefully read each question, as they ask different things. We encourage you to use the full scale range as the experiment progresses.</div>"
+        }
       ]
     },
     {
       "label": "Block 1",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_1",
         "condition_plan"
       ],
       "preBlockScreens": [
-        "You will now proceed through a series of experimental blocks\n\nThere will be eight (8) blocks in total, each consisiting of eight (8) rounds of the box task.\nAfter each round you will respond to the workload survey and then you will continue the task.\n\nBetween blocks you you will be given updates on your progress including your coin total, and invited to take a short break before continuing."
+        "You will now proceed through a series of experimental blocks.\n\nThere will be eight (8) blocks in total, each consisting of four (4) rounds of the box task.\nClick highlighted boxes to start memory tasks. Correct memory responses shrink boxes and help open them.\nAfter each round you will respond to the workload survey and then you will continue the task.\n\nBetween blocks you will be given updates on your progress including your coin total, and invited to take a short break before continuing."
       ]
     },
     {
       "label": "Block 2",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_2",
         "condition_plan"
@@ -638,7 +709,7 @@
     {
       "label": "Block 3",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_1",
         "condition_plan"
@@ -647,7 +718,7 @@
     {
       "label": "Block 4",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_2",
         "condition_plan"
@@ -656,7 +727,7 @@
     {
       "label": "Block 5",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_1",
         "condition_plan"
@@ -665,7 +736,7 @@
     {
       "label": "Block 6",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_2",
         "condition_plan"
@@ -674,7 +745,7 @@
     {
       "label": "Block 7",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_1",
         "condition_plan"
@@ -683,7 +754,7 @@
     {
       "label": "Block 8",
       "phase": "main",
-      "trials": 8,
+      "trials": 4,
       "manipulations": [
         "cell_2",
         "condition_plan"
@@ -692,7 +763,9 @@
         "enabled": true,
         "title": "",
         "lines": [
-            { "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45; style='text-align:center; margin-bottom:12px''>DO NOT CLOSE THIS WINDOW!<p><img src='assets/evander-bricks/break_images/finish_screen.png' style='max-width: 300px; width: 100%; height: auto; image-rendering:pixelated'></p><p>Congratulations! Your final coin balance is: {experimentPoints}.</p><p>Across the experiment you opened {blockCleared} boxes, and only let {blockDropped} boxes be destroyed. Boxy and his family are very happy.</p><p>You have now completed the experiment. Thank you very much for participating. Please read the debrief form on the next screen, then click Continue. The experiment will redirect to SONA and automatically apply your credits.</p><p>Do not close the window until you see a message from SONA that your credits have been awarded!</p>"}
+          {
+            "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45; style='text-align:center; margin-bottom:12px''>DO NOT CLOSE THIS WINDOW!<p><img src='assets/evander-bricks/break_images/finish_screen.png' style='max-width: 300px; width: 100%; height: auto; image-rendering:pixelated'></p><p>Congratulations! Your final coin balance is: {experimentPoints}.</p><p>Across the experiment you opened {blockCleared} boxes, and only let {blockDropped} boxes be destroyed. Boxy and his family are very happy.</p><p>You have now completed the experiment. Thank you very much for participating. Please read the debrief form on the next screen, then click Continue. The experiment will redirect to SONA and automatically apply your credits.</p><p>Do not close the window until you see a message from SONA that your credits have been awarded!</p>"
+          }
         ]
       }
     }
@@ -706,7 +779,9 @@
       {
         "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Welcome to the Box Task! Meet Boxy:<p><img src='assets/evander-bricks/sprite/boxy.png' alt='Boxy' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Help Boxy collect as many coins as possible from the boxes in his factory before time runs out!<p>The Goal: Open as many boxes moving along conveyor belts to earn coins.<p>Watch out for Presents - these are worth more coins!<p><img src='assets/evander-bricks/brick_types.png' alt='Present vs Crate example' style='max-width: 300px; width: 100%; height: auto;'/><p>But beware: if any box reaches the furnace at the end of the line, it will get destroyed and you will lose coins.</div>"
       },
-      {"html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>How to Play:<p>To open a box, click-and-hold the left mouse button on the highlighted box for exactly {bricks.completionParams.target_hold_ms / 1000} second ({bricks.completionParams.target_hold_ms} ms), then release.<p><img src='assets/evander-bricks/sprite/boxy_with_box.png' alt='Boxy with box' style='max-height: 120px; height: 100%; width: auto;'/> <img src='assets/evander-bricks/click_hold.gif' alt='mouse hold gif' style='max-height: 120px; height: 100%; width: auto;'/></p><p>The closer to exactly {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second) you hold for, the more of the box will be removed. If you click and hold for too long or short, less of the box will be removed.<p>By working hard at estimating {bricks.completionParams.target_hold_ms} ms ({bricks.completionParams.target_hold_ms / 1000} second) holds, you can clear the boxes faster and ensure you don't lose coins from boxes being destroyed.</div>"}
+      {
+        "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>How to Play:<p>To open a box, click the highlighted box to start a short memory task.</p><p>You will see a set of letters, then one probe letter. Press the RIGHT ARROW key if the probe was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).</p><p><img src='assets/evander-bricks/sprite/boxy_with_box.png' alt='Boxy with box' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Each correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks before they open.</p><p>The conveyor belts keep moving while you complete the memory task, so respond as accurately and quickly as you can.</p></div>"
+      }
     ],
     "blockSummary": {
       "enabled": true,
@@ -715,15 +790,17 @@
         "isPractice": false
       },
       "title": "End of {blockLabel} of 8",
-      "lines": [                                                                                                                                                                                        
-      { "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45; style='text-align:center; margin-bottom:12px''>Great work, time for a short break.<p><img src='assets/evander-bricks/break_images/break{summaryIndex1}.png' style='max-width: 300px; width: 100%; height: auto; image-rendering:pixelated'; margin-top: -2px; margin-bottom: -2px; margin-left: -2px; margin-right: -2px></p><p>Your current coin balance is: {experimentPoints}.</p><p>Across the experiment you have opened {blockCleared} boxes, and let {blockDropped} boxes be destroyed.</div>" }],
+      "lines": [
+        {
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45; style='text-align:center; margin-bottom:12px''>Great work, time for a short break.<p><img src='assets/evander-bricks/break_images/break{summaryIndex1}.png' style='max-width: 300px; width: 100%; height: auto; image-rendering:pixelated'; margin-top: -2px; margin-bottom: -2px; margin-left: -2px; margin-right: -2px></p><p>Your current coin balance is: {experimentPoints}.</p><p>Across the experiment you have opened {blockCleared} boxes, and let {blockDropped} boxes be destroyed.</div>"
+        }
+      ],
       "metrics": {
         "correctField": "responseCorrect",
         "rtField": "responseRtMs"
       }
     },
     "showBlockIntro": false,
-    "showBlockLabel": false,
     "endPages": [],
     "insertions": [
       {
@@ -734,7 +811,11 @@
             "title": "Ready to begin",
             "text": "Click the button below to start the study in fullscreen mode.",
             "actions": [
-              { "id": "start_fullscreen", "label": "Start in fullscreen", "action": "continue" }
+              {
+                "id": "start_fullscreen",
+                "label": "Start in fullscreen",
+                "action": "continue"
+              }
             ]
           }
         ]
@@ -747,8 +828,16 @@
             "title": "",
             "html": "<iframe src=\"assets/evander-bricks/consent.html\" title=\"Consent form\" style=\"width:min(980px,96vw);height:90vh;border:1px solid #d1d5db;border-radius:8px;background:#fff;\"></iframe>",
             "actions": [
-              { "id": "consent_yes", "label": "Yes", "action": "continue" },
-              { "id": "consent_no", "label": "No (exit study)", "action": "exit" }
+              {
+                "id": "consent_yes",
+                "label": "Yes",
+                "action": "continue"
+              },
+              {
+                "id": "consent_no",
+                "label": "No (exit study)",
+                "action": "exit"
+              }
             ]
           }
         ]
@@ -761,14 +850,18 @@
             "title": "Debrief",
             "html": "<iframe src=\"assets/evander-bricks/debrief.html\" title=\"Debrief form\" style=\"width:min(980px,96vw);height:80vh;border:1px solid #d1d5db;border-radius:8px;background:#fff;\"></iframe>",
             "actions": [
-              { "id": "debrief_continue", "label": "Continue", "action": "continue" }
+              {
+                "id": "debrief_continue",
+                "label": "Continue",
+                "action": "continue"
+              }
             ]
           }
         ]
       }
     ]
   },
- "ui": {
+  "ui": {
     "pageBackground": "linear-gradient(180deg, #DBDBDB 0%, #ADADAD 100%)",
     "cardWidth": "600px",
     "cardMinHeight": "400px",
@@ -847,9 +940,22 @@
     },
     "practiceFeedback": {
       "bins": [
-        { "max": -0.15, "label": "Fast", "color": "#D71B60" },
-        { "min": -0.15, "max": 0.15, "label": "Great!", "color": "#05FE04" },
-        { "min": 0.15, "label": "Slow", "color": "#0072B2" }
+        {
+          "max": -0.15,
+          "label": "Fast",
+          "color": "#D71B60"
+        },
+        {
+          "min": -0.15,
+          "max": 0.15,
+          "label": "Great!",
+          "color": "#05FE04"
+        },
+        {
+          "min": 0.15,
+          "label": "Slow",
+          "color": "#0072B2"
+        }
       ],
       "showHoldProgressCircle": false
     },
@@ -1064,11 +1170,11 @@
       "pixelSnapBricks": false
     }
   },
-    "completion": {
-        "redirect": {
-          "enabled": true,
-          "completeUrlTemplate": "https://uwapsychology.sona-systems.com/webstudy_credit.aspx?experiment_id=1961&credit_token=d302a7d19feb4fe98679a3ecc2d7a4d9&survey_code={participantId}",
-          "incompleteUrlTemplate": ""
-        }
+  "completion": {
+    "redirect": {
+      "enabled": true,
+      "completeUrlTemplate": "https://uwapsychology.sona-systems.com/webstudy_credit.aspx?experiment_id=1961&credit_token=d302a7d19feb4fe98679a3ecc2d7a4d9&survey_code={participantId}",
+      "incompleteUrlTemplate": ""
     }
+  }
 }

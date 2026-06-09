@@ -22,6 +22,8 @@ interface BrickRecord {
   createdAt: number;
   clicks: number;
   holds: number;
+  taskAttempts: number;
+  taskCompletions: number;
   clearProgress: number;
   isHovered: boolean;
   isHeld: boolean;
@@ -1137,6 +1139,8 @@ export class GameState {
       createdAt: this.elapsed,
       clicks: 0,
       holds: 0,
+      taskAttempts: 0,
+      taskCompletions: 0,
       clearProgress: 0,
       isHovered: false,
       isHeld: false,
@@ -1487,6 +1491,179 @@ export class GameState {
         x: brick.x,
         y: brick.y,
         note: 'Fallback clear for unimplemented mode.'
+      });
+    }
+  }
+
+
+
+  startBrickTaskSequence(brickId: string, taskId: string, taskType: string, timestamp: number, clickPos: PointerPos = {}) {
+    const { x = null, y = null } = clickPos || {};
+    const brick = this.bricks.get(brickId);
+    if (!brick) {
+      this.stats.clickErrors += 1;
+      this._log('brick_click', { brick_id: brickId ?? null, x, y, valid: false, completion_mode: 'task_sequence' });
+      this._log('brick_task_start', {
+        brick_id: brickId ?? null,
+        task_id: taskId,
+        task_type: taskType,
+        x,
+        y,
+        valid: false,
+        blocked_reason: 'brick_not_found'
+      });
+      return { ok: false, reason: 'brick_not_found' };
+    }
+    const gate = this._canWorkOnBrick(brick);
+    if (!gate.ok) {
+      this.stats.clickErrors += 1;
+      this._log('brick_click', {
+        ...this._brickEventPayload(brick),
+        x,
+        y,
+        valid: false,
+        completion_mode: 'task_sequence',
+        blocked_reason: gate.reason
+      });
+      this._log('brick_task_start', {
+        ...this._brickEventPayload(brick),
+        task_id: taskId,
+        task_type: taskType,
+        x,
+        y,
+        valid: false,
+        blocked_reason: gate.reason
+      });
+      return { ok: false, reason: gate.reason };
+    }
+    this._log('brick_click', {
+      ...this._brickEventPayload(brick),
+      x,
+      y,
+      valid: true,
+      completion_mode: 'task_sequence'
+    });
+    this._log('brick_task_start', {
+      ...this._brickEventPayload(brick),
+      task_id: taskId,
+      task_type: taskType,
+      x,
+      y,
+      valid: true,
+      completion_mode: 'task_sequence'
+    });
+    return { ok: true, reason: null, brickId: brick.id };
+  }
+
+  handleBrickTaskCompletion(brickId: string, result: Record<string, any>, timestamp: number) {
+    const brick = this.bricks.get(brickId);
+    const params = this.config.bricks?.completionParams || {};
+    const taskId = String(result?.taskId ?? result?.task_id ?? params.taskId ?? params.task_id ?? 'embedded_task');
+    const taskType = String(result?.taskType ?? result?.task_type ?? 'embedded');
+    const correct = result?.correct === true;
+    const responsePayload = result?.payload && typeof result.payload === 'object' ? result.payload : {};
+    if (!brick) {
+      this._log('embedded_task_response', {
+        task_id: taskId,
+        task_type: taskType,
+        brick_id: brickId ?? null,
+        correct,
+        valid: false,
+        blocked_reason: 'brick_not_found',
+        ...responsePayload
+      });
+      this._log('brick_task_progress', {
+        task_id: taskId,
+        task_type: taskType,
+        brick_id: brickId ?? null,
+        correct,
+        valid: false,
+        progress_gained: 0,
+        blocked_reason: 'brick_not_found'
+      });
+      return;
+    }
+    const gate = this._canWorkOnBrick(brick);
+    if (!gate.ok) {
+      this._log('embedded_task_response', {
+        ...this._brickEventPayload(brick),
+        task_id: taskId,
+        task_type: taskType,
+        correct,
+        valid: false,
+        blocked_reason: gate.reason,
+        ...responsePayload
+      });
+      this._log('brick_task_progress', {
+        ...this._brickEventPayload(brick),
+        task_id: taskId,
+        task_type: taskType,
+        correct,
+        valid: false,
+        progress_gained: 0,
+        blocked_reason: gate.reason
+      });
+      return;
+    }
+
+    brick.taskAttempts = Math.max(0, Number(brick.taskAttempts ?? 0)) + 1;
+    const progressBefore = Math.max(0, Math.min(1, Number(brick.clearProgress ?? 0)));
+    const widthScalingEnabled = params.width_scaling !== false;
+    const widthReferencePx = Math.max(1, Number(params.width_reference_px ?? this.config.display?.brickWidth ?? 160));
+    const widthScalingExponent = Math.max(0, Number(params.width_scaling_exponent ?? 1));
+    const widthFactorRaw = widthScalingEnabled ? (brick.width / widthReferencePx) : 1;
+    const widthFactor = Math.max(0.2, Math.pow(Math.max(0.01, widthFactorRaw), widthScalingExponent));
+    const baseProgress = Math.max(0.01, Math.min(1, Number(params.progress_per_correct ?? params.progressPerCorrect ?? 0.5)));
+    const gained = correct ? (baseProgress / widthFactor) : 0;
+    if (correct) {
+      brick.taskCompletions = Math.max(0, Number(brick.taskCompletions ?? 0)) + 1;
+      brick.clearProgress = Math.max(0, Math.min(1, progressBefore + gained));
+    }
+    const progressAfter = Math.max(0, Math.min(1, Number(brick.clearProgress ?? 0)));
+    const remainingWidthBeforePx = Math.max(0, (1 - progressBefore) * Math.max(1, Number(brick.initialWidth ?? brick.width ?? 1)));
+    const remainingWidthAfterPx = Math.max(0, (1 - progressAfter) * Math.max(1, Number(brick.initialWidth ?? brick.width ?? 1)));
+
+    this._log('embedded_task_response', {
+      ...this._brickEventPayload(brick),
+      task_id: taskId,
+      task_type: taskType,
+      correct,
+      valid: true,
+      ...responsePayload
+    });
+    this._log('brick_task_progress', {
+      ...this._brickEventPayload(brick),
+      task_id: taskId,
+      task_type: taskType,
+      correct,
+      valid: true,
+      completion_mode: 'task_sequence',
+      progress_gained: gained,
+      progress_total: progressAfter,
+      progress_before: progressBefore,
+      progress_after: progressAfter,
+      remaining_width_px_before: remainingWidthBeforePx,
+      remaining_width_px_after: remainingWidthAfterPx,
+      width_factor: widthFactor,
+      width_reference_px: widthReferencePx,
+      task_attempts: brick.taskAttempts,
+      task_completions: brick.taskCompletions
+    });
+
+    if (brick.clearProgress >= 1) {
+      this._finalizeBrick(brick, BRICK_STATUS.CLEARED, {
+        completion_mode: 'task_sequence',
+        task_id: taskId,
+        task_type: taskType,
+        task_attempts: brick.taskAttempts,
+        task_completions: brick.taskCompletions,
+        progress: progressAfter,
+        progress_before: progressBefore,
+        progress_after: progressAfter,
+        remaining_width_px_before: remainingWidthBeforePx,
+        remaining_width_px_after: remainingWidthAfterPx,
+        x: brick.x,
+        y: brick.y
       });
     }
   }

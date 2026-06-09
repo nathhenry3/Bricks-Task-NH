@@ -3005,7 +3005,7 @@ export class ConveyorRenderer {
       const progressChanged = sprite.progressValue !== brick.clearProgress;
       const needsProgressRedraw =
         progressChanged &&
-        (completionMode === 'hold_duration' || completionMode === 'hover_to_clear' || completionMode === 'hold_to_clear') &&
+        (completionMode === 'hold_duration' || completionMode === 'hover_to_clear' || completionMode === 'hold_to_clear' || completionMode === 'task_sequence') &&
         !sprite.usesProgressMask;
       if (
         sprite.modeValue !== completionMode ||
@@ -3137,7 +3137,7 @@ export class ConveyorRenderer {
   }
 
   _shouldUseProgressMask(shape: string, completionMode: string) {
-    if (!['hold_duration', 'hover_to_clear', 'hold_to_clear'].includes(completionMode)) {
+    if (!['hold_duration', 'hover_to_clear', 'hold_to_clear', 'task_sequence'].includes(completionMode)) {
       return false;
     }
     // Circles should deplete via the same right-edge clipping path as rectangles.
@@ -3266,7 +3266,7 @@ export class ConveyorRenderer {
     );
     const supportsMaskProgress = this._shouldUseProgressMask(shape, completionMode);
 
-    if (supportsMaskProgress && (completionMode === 'hold_duration' || completionMode === 'hold_to_clear' || completionMode === 'hover_to_clear')) {
+    if (supportsMaskProgress && (completionMode === 'hold_duration' || completionMode === 'hold_to_clear' || completionMode === 'hover_to_clear' || completionMode === 'task_sequence')) {
       const isHover = completionMode === 'hover_to_clear';
       
       const mask = new PIXI.Graphics();
@@ -3317,7 +3317,7 @@ export class ConveyorRenderer {
       sprite.addChild(progressGraphic);
       sprite.progressGraphic = progressGraphic;
 
-    } else if (completionMode === 'hold_duration' || completionMode === 'hold_to_clear') {
+    } else if (completionMode === 'hold_duration' || completionMode === 'hold_to_clear' || completionMode === 'task_sequence') {
       const legacyGraphic = new PIXI.Graphics();
       const remainingWidth = getBrickVisibleWidth(brick, completionMode);
       const legacyRadius = Math.max(0, Math.min(cornerRadius, remainingWidth / 2, brick.height / 2));

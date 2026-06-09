@@ -73,6 +73,40 @@ const hoverToClearDemand = (brick, conveyor, config) => {
   };
 };
 
+
+const taskSequenceDemand = (brick, config) => {
+  const params = config?.bricks?.completionParams || {};
+  const taskId = String(params.taskId ?? params.task_id ?? 'sternberg_task');
+  const taskConfig = config?.bricks?.embeddedTasks?.[taskId] || {};
+  const width = Math.max(1, finiteOr(brick?.width, finiteOr(config?.display?.brickWidth, 160)));
+  const progressPerCorrect = Math.max(0.01, Math.min(1, finiteOr(params.progress_per_correct ?? params.progressPerCorrect, 0.5)));
+  const widthScalingEnabled = params.width_scaling !== false;
+  const widthReferencePx = Math.max(1, finiteOr(params.width_reference_px, finiteOr(config?.display?.brickWidth, 160)));
+  const widthScalingExponent = Math.max(0, finiteOr(params.width_scaling_exponent, 1));
+  const widthFactorRaw = widthScalingEnabled ? (width / widthReferencePx) : 1;
+  const widthFactor = Math.max(0.2, Math.pow(Math.max(0.01, widthFactorRaw), widthScalingExponent));
+  const expectedCorrectTasks = 1 / Math.max(1e-4, progressPerCorrect / widthFactor);
+  const memoryDurationMs = Math.max(100, finiteOr(taskConfig.memoryDurationMs ?? taskConfig.memory_duration_ms, 2200));
+  const retentionDelayMs = Math.max(0, finiteOr(taskConfig.retentionDelayMs ?? taskConfig.retention_delay_ms, 500));
+  const responseMs = Math.max(100, finiteOr(config?.difficultyModel?.embeddedTaskResponseMs, 1200));
+  const feedbackMs = Math.max(0, finiteOr(taskConfig.feedbackDurationMs ?? taskConfig.feedback_duration_ms, 350));
+  const accuracy = Math.max(0.01, Math.min(1, finiteOr(config?.difficultyModel?.embeddedTaskAccuracy, 0.95)));
+  const expectedTaskMs = memoryDurationMs + retentionDelayMs + responseMs + feedbackMs;
+  const expectedAttempts = expectedCorrectTasks / accuracy;
+  return {
+    mode: 'task_sequence',
+    task_id: taskId,
+    task_type: String(taskConfig.type ?? 'sternberg'),
+    width_px: width,
+    progress_per_correct: progressPerCorrect,
+    width_factor: widthFactor,
+    expected_correct_tasks: expectedCorrectTasks,
+    expected_task_ms: expectedTaskMs,
+    expected_accuracy: accuracy,
+    expected_clear_ms: expectedAttempts * expectedTaskMs
+  };
+};
+
 const clickDemand = (brick, config) => {
   const mode = config?.bricks?.completionMode;
   const params = config?.bricks?.completionParams || {};
@@ -118,6 +152,9 @@ const brickDemandEstimate = (brick, conveyor, config) => {
   }
   if (mode === 'single_click' || mode === 'multi_click') {
     return clickDemand(brick, config);
+  }
+  if (mode === 'task_sequence') {
+    return taskSequenceDemand(brick, config);
   }
   // Unknown mode fallback to a conservative click-like estimate.
   return clickDemand(brick, {
