@@ -68,6 +68,7 @@ export interface ConveyorTrialDrtRuntime {
 }
 
 const randomUint32 = nextSecureUint32;
+const isContinueActivationKey = (key: string): boolean => ['enter', 'arrowright'].includes(normalizeKey(key));
 
 const materializeSeed = (seedSpec: unknown) => {
   if (seedSpec === undefined || seedSpec === null) return randomUint32();
@@ -797,6 +798,11 @@ export async function runConveyorTrial(args: ConveyorTrialRunArgs): Promise<Conv
     const keyHandler = (e: KeyboardEvent) => {
       const key = e.key;
       if (!trialStarted && startTrigger === 'space' && key === ' ') {
+        e.preventDefault();
+        beginTrial();
+        return;
+      }
+      if (!trialStarted && startTrigger === 'click' && isContinueActivationKey(key)) {
         e.preventDefault();
         beginTrial();
         return;

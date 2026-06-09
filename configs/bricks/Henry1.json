@@ -154,8 +154,8 @@
           "present": "ArrowRight",
           "absent": "ArrowLeft"
         },
-        "keyReminder": "\u2190 No, not in set     Yes, in set \u2192",
-        "promptText": "Remember the letters, then press the right arrow if the probe was in the set or the left arrow if it was not."
+        "keyReminder": "\u2190 No, not in set                 Yes, in set \u2192",
+        "promptText": "Remember the letters, then press the RIGHT ARROW key if the probe was in the set (YES), or the LEFT ARROW key if it was not (NO). Keep your right hand on the left/right arrow keys with one finger on each key, and your left hand on the spacebar."
       }
     }
   },
@@ -514,8 +514,8 @@
                 "present": "ArrowRight",
                 "absent": "ArrowLeft"
               },
-              "keyReminder": "\u2190 No, not in set     Yes, in set \u2192",
-              "promptText": "Remember the letters, then press the right arrow if the probe was in the set or the left arrow if it was not.",
+              "keyReminder": "\u2190 No, not in set                 Yes, in set \u2192",
+              "promptText": "Remember the letters, then press the RIGHT ARROW key if the probe was in the set (YES), or the LEFT ARROW key if it was not (NO). Keep your right hand on the left/right arrow keys with one finger on each key, and your left hand on the spacebar.",
               "showInstructions": true
             }
           },
@@ -569,10 +569,10 @@
         }
       },
       "preBlockScreens": [
-        "First, we will practice the memory task that opens boxes.\n\nA small set of letters will appear. Remember them. After a short pause, one probe letter will appear.\n\nPress the RIGHT ARROW key if the probe letter was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).\n\nPlease place your right finger on the right arrow key and your left finger on the left arrow key.\n\nEach correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks.\n\nThe conveyor belts will keep moving during practice, so respond as accurately and quickly as you can."
+        "First, we will practice the memory task that opens boxes.\n\nA small set of letters will appear. Remember them. After a short pause, one probe letter will appear.\n\nPress the RIGHT ARROW key if the probe letter was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).\n\nPlease place your right hand on the left/right arrow keys, with one finger on each key, and place your left hand on the SPACEBAR.\n\nEach correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks.\n\nThe conveyor belts will keep moving during practice, so respond as accurately and quickly as you can."
       ],
       "repeatAfterBlockScreens": [
-        "Remember: right arrow means YES, the probe was in the set. Left arrow means NO, the probe was not in the set.\n\nCorrect responses shrink the highlighted box. Incorrect responses do not. Press continue when you are ready for the next set of trials."
+        "Remember: RIGHT ARROW (or ENTER on continue screens) means YES, the probe was in the set. LEFT ARROW means NO, the probe was not in the set. Keep your right hand on the arrow keys and your left hand on the SPACEBAR.\n\nCorrect responses shrink the highlighted box. Incorrect responses do not. Press the RIGHT ARROW key or ENTER when you are ready for the next set of trials."
       ],
       "repeatUntil": {
         "enabled": true,
@@ -674,11 +674,11 @@
         }
       },
       "preBlockScreens": [
-        "Let's practice the DRT.\nIgnore the conveyor and focus only on the red border signal.\n\nPress SPACEBAR as quickly as possible whenever the border flashes red.\n\nThis block will end after 60 seconds.\n\nWe recommend resting your finger on the SPACEBAR so you can press it quickly without moving your hand.\n\nIn the following block there will be two rounds."
+        "Let's practice the DRT.\nIgnore the conveyor and focus only on the red border signal.\n\nPress SPACEBAR as quickly as possible whenever the border flashes red.\n\nThis block will end after 60 seconds.\n\nPlease keep your left hand on the SPACEBAR so you can press it quickly without moving your hand.\n\nIn the following block there will be two rounds."
       ],
       "afterBlockScreens": [
         {
-          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Great job!<p><img src='assets/evander-bricks/sprite/boxy_with_coin.png' alt='Boxy With Coin' style='max-height: 120px; height: 100%; width: auto;'/></p><p>We will now do some practice trials putting both tasks together. Use your mouse to click the highlighted box and complete the memory task, and rest a finger from the other hand on the SPACEBAR. Press the SPACEBAR whenever you see the red border flash, as quickly as you can while still opening the boxes.</p><p>It might feel a little tricky to do both tasks at first, but we will have several rounds of practice to familiarise you with the responses. Boxy believes in you!</p></div>"
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Great job!<p><img src='assets/evander-bricks/sprite/boxy_with_coin.png' alt='Boxy With Coin' style='max-height: 120px; height: 100%; width: auto;'/></p><p>We will now do some practice trials putting both tasks together. Use your mouse to click the highlighted box and complete the memory task. Keep your right hand on the left/right arrow keys with one finger on each key, and keep your left hand on the SPACEBAR. Press the SPACEBAR whenever you see the red border flash, as quickly as you can while still opening the boxes.</p><p>It might feel a little tricky to do both tasks at first, but we will have several rounds of practice to familiarise you with the responses. Boxy believes in you!</p></div>"
         }
       ]
     },
@@ -799,7 +799,7 @@
         "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>Welcome to the Box Task! Meet Boxy:<p><img src='assets/evander-bricks/sprite/boxy.png' alt='Boxy' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Help Boxy collect as many coins as possible from the boxes in his factory before time runs out!<p>The Goal: Open as many boxes moving along conveyor belts to earn coins.<p>Watch out for Presents - these are worth more coins!<p><img src='assets/evander-bricks/brick_types.png' alt='Present vs Crate example' style='max-width: 300px; width: 100%; height: auto;'/><p>But beware: if any box reaches the furnace at the end of the line, it will get destroyed and you will lose coins.</div>"
       },
       {
-        "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>How to Play:<p>To open a box, click the highlighted box to start a short memory task.</p><p>You will see a set of letters, then one probe letter. Press the RIGHT ARROW key if the probe was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).</p><p><img src='assets/evander-bricks/sprite/boxy_with_box.png' alt='Boxy with box' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Each correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks before they open.</p><p>The conveyor belts keep moving while you complete the memory task, so respond as accurately and quickly as you can.</p></div>"
+        "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45;'>How to Play:<p>To open a box, click the highlighted box to start a short memory task.</p><p>You will see a set of letters, then one probe letter. Press the RIGHT ARROW key if the probe was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO). Keep your right hand on the left/right arrow keys, with one finger on each key, and your left hand on the SPACEBAR.</p><p><img src='assets/evander-bricks/sprite/boxy_with_box.png' alt='Boxy with box' style='max-height: 120px; height: 100%; width: auto;'/></p><p>Each correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks before they open.</p><p>The conveyor belts keep moving while you complete the memory task, so respond as accurately and quickly as you can.</p></div>"
       }
     ],
     "blockSummary": {

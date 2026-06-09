@@ -243,7 +243,11 @@ Example pattern:
 - show `points` cumulative across experiment
 - then reset only experiment points after practice blocks
 
-## 6. Trial start trigger
+## 6. Embedded task response reminders
+
+Embedded Sternberg key reminders preserve whitespace so configs can separate left/right response labels horizontally in the conveyor overlay.
+
+## 7. Trial start trigger
 
 `experiment` supports click/space start trigger configuration:
 - `startTrialsOn: "space" | "click"` (preferred)
@@ -251,8 +255,9 @@ Example pattern:
   - `startTrialsOnSpace: true` -> `"space"`
   - `startTrialsOnClick: true` -> `"click"`
 - click-start button styling can be set in `experiment.startOverlay.buttonStyle` (same style fields as core continue buttons).
+- click-start overlays can be dismissed by clicking the button, pressing `Enter`, or pressing `ArrowRight`; this mirrors core continue-screen activation for keyboard-first flows.
 
-## 7. Pixi stimulus PNG capture (instructions assets)
+## 8. Pixi stimulus PNG capture (instructions assets)
 
 Use the capture script to export brick stimuli exactly as rendered by the Bricks Pixi runtime.
 

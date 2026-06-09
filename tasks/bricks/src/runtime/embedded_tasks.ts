@@ -195,6 +195,7 @@ const runSternbergTask = (args: RunEmbeddedTaskArgs): Promise<EmbeddedTaskResult
       'font-size': '16px',
       'font-weight': '700',
       'letter-spacing': '0',
+      'white-space': 'pre-wrap',
     });
     panel.appendChild(reminder);
 

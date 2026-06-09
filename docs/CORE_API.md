@@ -191,7 +191,7 @@ Captures first valid key in `[startMs, endMs]` window over `totalDurationMs`.
 
 ### `waitForContinue(container, html, options?): Promise<void>`
 
-Displays HTML screen with continue button and `space` shortcut.
+Displays HTML screen with continue button and `space`, `Enter`, or `ArrowRight` keyboard shortcuts.
 
 ### `toJsPsychKey(key): string`
 
