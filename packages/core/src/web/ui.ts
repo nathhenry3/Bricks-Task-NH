@@ -493,6 +493,13 @@ export function applyButtonStyleOverrides(button: HTMLButtonElement, style: Butt
   if (style.textTransform !== undefined) button.style.textTransform = style.textTransform;
 }
 
+
+const DEFAULT_CONTINUE_KEYS = ["space", "enter", "arrowright"];
+
+function isContinueActivationKey(key: string): boolean {
+  return DEFAULT_CONTINUE_KEYS.includes(normalizeKey(key));
+}
+
 function buildContinueScreenHtml(
   contentHtml: string,
   actionsHtml: string,
@@ -542,7 +549,7 @@ export async function waitForContinue(
 
   await new Promise<void>((resolve) => {
     onKeyRef = (ev: KeyboardEvent) => {
-      if (normalizeKey(ev.key) !== "space") return;
+      if (!isContinueActivationKey(ev.key)) return;
       if (!isEditableKeyTarget(ev.target)) ev.preventDefault();
       cleanup();
       resolve();
@@ -635,7 +642,7 @@ export async function waitForContinueChoice(
       submit(selected);
     };
     const onKey = (event: KeyboardEvent) => {
-      if (normalizeKey(event.key) !== "space") return;
+      if (!isContinueActivationKey(event.key)) return;
       if (!isEditableKeyTarget(event.target)) event.preventDefault();
       const preferred = buttons.find((b) => b.action === "continue") ?? buttons[0];
       submit(preferred);
