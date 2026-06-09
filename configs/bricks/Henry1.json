@@ -526,7 +526,26 @@
               "width": 50,
               "textureCategoryId": "Other"
             }
-          ]
+          ],
+          "forcedSetPlan": {
+            "enable": false,
+            "count": 0
+          },
+          "maxBricksPerTrial": 1
+        },
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": 5
+          }
+        },
+        "display": {
+          "performance": {
+            "pixelSnapBricks": true
+          }
+        },
+        "surveys": {
+          "postTrial": []
         },
         "conveyors": {
           "speedPxPerSec": {
@@ -550,7 +569,7 @@
         }
       },
       "preBlockScreens": [
-        "First, we will practice the memory task that opens boxes.\n\nA small set of letters will appear. Remember them. After a short pause, one probe letter will appear.\n\nPress the RIGHT ARROW key if the probe letter was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).\n\nPlease place your right finger on the right arrow key and your left finger on the left arrow key.\n\nEach correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks."
+        "First, we will practice the memory task that opens boxes.\n\nA small set of letters will appear. Remember them. After a short pause, one probe letter will appear.\n\nPress the RIGHT ARROW key if the probe letter was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).\n\nPlease place your right finger on the right arrow key and your left finger on the left arrow key.\n\nEach correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks.\n\nThe conveyor belts will keep moving during practice, so respond as accurately and quickly as you can."
       ],
       "repeatAfterBlockScreens": [
         "Remember: right arrow means YES, the probe was in the set. Left arrow means NO, the probe was not in the set.\n\nCorrect responses shrink the highlighted box. Incorrect responses do not. Press continue when you are ready for the next set of trials."

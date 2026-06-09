@@ -215,4 +215,27 @@ describe('GameState task_sequence dynamics', () => {
     const taskEvents = gameState.events.filter((event: any) => event.type === 'embedded_task_response');
     expect(taskEvents).toHaveLength(3);
   });
+
+  it('moves active task_sequence bricks when conveyor speed is non-zero', () => {
+    const cfg: any = buildConfig();
+    cfg.bricks.completionMode = 'task_sequence';
+    cfg.bricks.completionParams = {
+      taskId: 'sternberg_task',
+      progress_per_correct: 0.5,
+    };
+    cfg.bricks.embeddedTasks = {
+      sternberg_task: { type: 'sternberg' },
+    };
+    cfg.conveyors.speedPxPerSec = { type: 'fixed', value: 5 };
+
+    const gameState: any = new GameState(cfg, { seed: 23 });
+    const brick: any = Array.from(gameState.bricks.values())[0];
+    const initialX = brick.x;
+
+    gameState.step(1000);
+
+    const moved: any = gameState.bricks.get(brick.id);
+    expect(moved).toBeTruthy();
+    expect(moved.x).toBeCloseTo(initialX + 5, 6);
+  });
 });
