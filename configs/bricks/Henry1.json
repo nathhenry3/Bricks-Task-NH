@@ -547,6 +547,20 @@
         "surveys": {
           "postTrial": []
         },
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": 0
+          }
+        },
+        "display": {
+          "performance": {
+            "pixelSnapBricks": true
+          }
+        },
+        "surveys": {
+          "postTrial": []
+        },
         "trial": {
           "mode": "max_bricks",
           "forcedOrder": {
