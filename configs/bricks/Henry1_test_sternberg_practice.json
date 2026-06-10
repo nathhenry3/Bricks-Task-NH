@@ -1,0 +1,928 @@
+{
+  "conveyors": {
+    "nConveyors": 4,
+    "lengthPx": {
+      "type": "uniform",
+      "min": 580,
+      "max": 720
+    },
+    "speedPxPerSec": {
+      "type": "fixed",
+      "value": 20
+    }
+  },
+  "bricks": {
+    "dropPenalty": {
+      "enable": true,
+      "showCoinAnimation": true
+    },
+    "completionMode": "task_sequence",
+    "interaction": {
+      "targetingArea": "spotlight"
+    },
+    "completionParams": {
+      "taskId": "sternberg_task",
+      "progress_per_correct": 0.5,
+      "width_scaling": true,
+      "width_reference_px": 50,
+      "width_scaling_exponent": 1
+    },
+    "textureCategories": [
+      {
+        "id": "Target",
+        "label": "High Value",
+        "textureStyle": {
+          "type": "list",
+          "values": [
+            "present_orange_purple",
+            "present_green_blue",
+            "present_blue_silver",
+            "present_purple_gold"
+          ]
+        },
+        "value": {
+          "type": "poisson",
+          "lambda": 1,
+          "min": 5,
+          "max": 8
+        }
+      },
+      {
+        "id": "Other",
+        "label": "Distractor",
+        "textureStyle": {
+          "type": "list",
+          "values": [
+            "box_light_brown",
+            "crate_light_brown",
+            "box_med_brown",
+            "crate_med_brown",
+            "box_dark_brown",
+            "crate_dark_brown"
+          ],
+          "without_replacement": true
+        },
+        "value": {
+          "type": "poisson",
+          "lambda": 1,
+          "min": 1,
+          "max": 4
+        }
+      }
+    ],
+    "initialBricks": {
+      "type": "fixed",
+      "value": 0
+    },
+    "forcedSet": [],
+    "forcedSetPlan": {
+      "enable": true,
+      "count": 4,
+      "defaults": {
+        "width": {
+          "type": "uniform",
+          "min": 30,
+          "max": 70
+        }
+      },
+      "fields": {
+        "conveyorIndex": {
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "draw": "without_replacement"
+        },
+        "rightEdge": 150,
+        "textureCategoryId": {
+          "values": [
+            "Other",
+            "Other",
+            "Other",
+            "Other"
+          ],
+          "draw": "without_replacement"
+        }
+      }
+    },
+    "maxBricksPerTrial": 4,
+    "spawn": {
+      "ratePerSec": {
+        "type": "fixed",
+        "value": 0
+      },
+      "interSpawnDist": null,
+      "minSpacingPx": 0,
+      "byConveyor": true,
+      "maxActivePerConveyor": 1
+    },
+    "embeddedTasks": {
+      "sternberg_task": {
+        "type": "sternberg",
+        "title": "Memory task",
+        "letters": [
+          "B",
+          "C",
+          "D",
+          "F",
+          "G",
+          "H",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z"
+        ],
+        "memorySetSize": 4,
+        "probePresentProbability": 0.5,
+        "memoryDurationMs": 2200,
+        "retentionDelayMs": 500,
+        "feedbackDurationMs": 350,
+        "responseKeys": {
+          "present": "ArrowRight",
+          "absent": "ArrowLeft"
+        },
+        "keyReminder": "\u2190 No, not in set                 Yes, in set \u2192",
+        "promptText": "Remember the letters, then press the RIGHT ARROW key if the probe was in the set (YES), or the LEFT ARROW key if it was not (NO). Keep your right hand on the left/right arrow keys with one finger on each key, and your left hand on the spacebar."
+      }
+    }
+  },
+  "difficultyModel": {
+    "avgClickIntervalMs": 125,
+    "embeddedTaskResponseMs": 1200,
+    "embeddedTaskAccuracy": 0.95
+  },
+  "trial": {
+    "mode": "max_bricks",
+    "maxTimeSec": null,
+    "forcedOrder": {
+      "enable": true,
+      "switchMode": "on_clear",
+      "switchOnDrop": true,
+      "coverStory": {
+        "enableAmmoCue": false
+      }
+    },
+    "brickQuotaEndDelayMs": 1000,
+    "stopDrtOnBrickQuotaMet": true
+  },
+  "experiment": {
+    "showBetweenBlockSummary": true,
+    "startTrialsOn": "click",
+    "startOverlay": {
+      "text": "Click to begin.",
+      "padding": "0",
+      "background": "transparent",
+      "border": "none",
+      "borderRadius": "0",
+      "boxShadow": "none",
+      "buttonStyle": {
+        "background": "black",
+        "border": "none",
+        "borderRadius": "200px",
+        "padding": "18px 32px",
+        "fontSize": "24px",
+        "outline": "none",
+        "boxShadow": "none"
+      }
+    },
+    "statsPresentation": {
+      "scopeByMetric": {
+        "points": "experiment",
+        "cleared": "block",
+        "dropped": "block"
+      },
+      "reset": [
+        {
+          "at": "block_end",
+          "scope": "experiment",
+          "metrics": [
+            "points"
+          ],
+          "when": {
+            "isPractice": true
+          }
+        }
+      ]
+    }
+  },
+  "surveys": {
+    "postTrial": [
+      {
+        "preset": "nasa_tlx",
+        "showQuestionNumbers": false,
+        "showRequiredAsterisk": false,
+        "questionBorder": "none",
+        "questionBorderRadius": "0",
+        "prompt": "Rate your overall workload during the just-completed trial (1-10).",
+        "title": "",
+        "questionsLayout": "grid",
+        "showSubscaleLabels": false,
+        "subscales": [
+          "mental_demand",
+          "temporal_demand",
+          "effort",
+          "frustration"
+        ],
+        "showValue": true
+      }
+    ]
+  },
+  "autoresponder": {
+    "continueDelayMs": {
+      "minMs": 100,
+      "maxMs": 300
+    },
+    "surveySubmitDelayMs": {
+      "minMs": 40,
+      "maxMs": 140
+    },
+    "embeddedTaskResponseDelayMs": {
+      "minMs": 700,
+      "maxMs": 1300
+    },
+    "embeddedTaskAccuracy": 1
+  },
+  "variables": {
+    "between": {
+      "scope": "participant",
+      "sampler": {
+        "type": "list",
+        "values": [
+          {
+            "cell1Label": "Low",
+            "cell1SpeedPxPerSec": 8,
+            "cell2Label": "High",
+            "cell2SpeedPxPerSec": 10
+          },
+          {
+            "cell1Label": "High",
+            "cell1SpeedPxPerSec": 10,
+            "cell2Label": "Low",
+            "cell2SpeedPxPerSec": 8
+          }
+        ]
+      }
+    }
+  },
+  "manipulations": [
+    {
+      "id": "difficulty_practice",
+      "label": "Practice1",
+      "overrides": {
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": 5
+          }
+        }
+      }
+    },
+    {
+      "id": "difficulty_practice2",
+      "label": "Practice2",
+      "overrides": {
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": 7
+          }
+        }
+      }
+    },
+    {
+      "id": "cell_1",
+      "label": "$between.cell1Label difficulty",
+      "overrides": {
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": "$between.cell1SpeedPxPerSec"
+          }
+        }
+      }
+    },
+    {
+      "id": "cell_2",
+      "label": "$between.cell2Label difficulty",
+      "overrides": {
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": "$between.cell2SpeedPxPerSec"
+          }
+        }
+      }
+    },
+    {
+      "id": "condition_plan",
+      "label": "Trial types",
+      "overrides": {},
+      "trialPlan": {
+        "schedule": {
+          "mode": "quota_shuffle"
+        },
+        "variants": [
+          {
+            "id": "control",
+            "label": "all_controls",
+            "overrides": {
+              "bricks": {
+                "forcedSetPlan": {
+                  "fields": {
+                    "textureCategoryId": {
+                      "values": [
+                        "Other",
+                        "Other",
+                        "Other",
+                        "Other"
+                      ],
+                      "draw": "without_replacement"
+                    }
+                  }
+                }
+              },
+              "trial": {
+                "forcedOrder": {
+                  "sequence": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "target_pos2",
+            "label": "target_pos2",
+            "overrides": {
+              "bricks": {
+                "forcedSetPlan": {
+                  "fields": {
+                    "textureCategoryId": {
+                      "values": [
+                        "Target",
+                        "Other",
+                        "Other",
+                        "Other"
+                      ],
+                      "draw": "sequence"
+                    }
+                  }
+                }
+              },
+              "trial": {
+                "forcedOrder": {
+                  "sequence": [
+                    1,
+                    0,
+                    2,
+                    3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "target_pos3",
+            "label": "target_pos3",
+            "overrides": {
+              "bricks": {
+                "forcedSetPlan": {
+                  "fields": {
+                    "textureCategoryId": {
+                      "values": [
+                        "Target",
+                        "Other",
+                        "Other",
+                        "Other"
+                      ],
+                      "draw": "sequence"
+                    }
+                  }
+                }
+              },
+              "trial": {
+                "forcedOrder": {
+                  "sequence": [
+                    1,
+                    2,
+                    0,
+                    3
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "target_pos4",
+            "label": "target_pos4",
+            "overrides": {
+              "bricks": {
+                "forcedSetPlan": {
+                  "fields": {
+                    "textureCategoryId": {
+                      "values": [
+                        "Target",
+                        "Other",
+                        "Other",
+                        "Other"
+                      ],
+                      "draw": "sequence"
+                    }
+                  }
+                }
+              },
+              "trial": {
+                "forcedOrder": {
+                  "sequence": [
+                    1,
+                    2,
+                    3,
+                    0
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "blocks": [
+    {
+      "label": "SternbergTaskPractice",
+      "phase": "practice",
+      "showBetweenBlockSummary": false,
+      "trials": 1,
+      "overrides": {
+        "task": {
+          "modules": {
+            "drt": {
+              "enabled": false
+            }
+          }
+        },
+        "bricks": {
+          "embeddedTasks": {
+            "sternberg_task": {
+              "type": "sternberg",
+              "title": "Memory task",
+              "letters": [
+                "B",
+                "C",
+                "D",
+                "F",
+                "G",
+                "H",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "P",
+                "Q",
+                "R",
+                "S",
+                "T",
+                "V",
+                "W",
+                "X",
+                "Y",
+                "Z"
+              ],
+              "memorySetSize": 4,
+              "probePresentProbability": 0.5,
+              "memoryDurationMs": 2200,
+              "retentionDelayMs": 500,
+              "feedbackDurationMs": 650,
+              "responseKeys": {
+                "present": "ArrowRight",
+                "absent": "ArrowLeft"
+              },
+              "keyReminder": "\u2190 No, not in set                 Yes, in set \u2192",
+              "promptText": "Remember the letters, then press the RIGHT ARROW key if the probe was in the set (YES), or the LEFT ARROW key if it was not (NO). Keep your right hand on the left/right arrow keys with one finger on each key, and your left hand on the spacebar.",
+              "showInstructions": true
+            }
+          },
+          "forcedSet": [
+            {
+              "conveyorIndex": 0,
+              "xFraction": 0.5,
+              "width": 50,
+              "textureCategoryId": "Other"
+            }
+          ],
+          "forcedSetPlan": {
+            "enable": false,
+            "count": 0
+          },
+          "maxBricksPerTrial": 1
+        },
+        "conveyors": {
+          "speedPxPerSec": {
+            "type": "fixed",
+            "value": 0
+          }
+        },
+        "display": {
+          "performance": {
+            "pixelSnapBricks": true
+          }
+        },
+        "surveys": {
+          "postTrial": []
+        },
+        "trial": {
+          "mode": "max_bricks",
+          "forcedOrder": {
+            "enable": true
+          }
+        }
+      },
+      "preBlockScreens": [
+        "First, we will practice the memory task that opens boxes.\n\nA small set of letters will appear. Remember them. After a short pause, one probe letter will appear.\n\nPress the RIGHT ARROW key if the probe letter was in the set (YES). Press the LEFT ARROW key if it was not in the set (NO).\n\nPlease place your right hand on the left/right arrow keys, with one finger on each key, and place your left hand on the SPACEBAR.\n\nEach correct memory response shrinks the highlighted box by one step. Incorrect responses do not shrink the box. Wider boxes require more correct memory tasks.\n\nThe conveyor belts will keep moving during practice, so respond as accurately and quickly as you can."
+      ],
+      "repeatAfterBlockScreens": [
+        "Remember: RIGHT ARROW (or ENTER on continue screens) means YES, the probe was in the set. LEFT ARROW means NO, the probe was not in the set. Keep your right hand on the arrow keys and your left hand on the SPACEBAR.\n\nCorrect responses shrink the highlighted box. Incorrect responses do not. Press the RIGHT ARROW key or ENTER when you are ready for the next set of trials."
+      ],
+      "repeatUntil": {
+        "enabled": false,
+        "maxAttempts": 1,
+        "minMeanMetric": 1,
+        "metrics": {
+          "correctField": "game.stats.cleared",
+          "metricField": "game.stats.cleared"
+        }
+      }
+    }
+  ],
+  "instructions": {
+    "showTaskTitleCard": false,
+    "showBlockLabel": false,
+    "preBlockBeforeBlockIntro": true,
+    "skipBeforeBlockScreensOnRepeat": true,
+    "introPages": [],
+    "blockSummary": {
+      "enabled": true,
+      "at": "block_end_before_post",
+      "when": {
+        "isPractice": false
+      },
+      "title": "End of {blockLabel} of 8",
+      "lines": [
+        {
+          "html": "<div style='font-family: system-ui, -apple-system, sans-serif; font-size: 1.2rem; line-height: 1.45; style='text-align:center; margin-bottom:12px''>Great work, time for a short break.<p><img src='assets/evander-bricks/break_images/break{summaryIndex1}.png' style='max-width: 300px; width: 100%; height: auto; image-rendering:pixelated'; margin-top: -2px; margin-bottom: -2px; margin-left: -2px; margin-right: -2px></p><p>Your current coin balance is: {experimentPoints}.</p><p>Across the experiment you have opened {blockCleared} boxes, and let {blockDropped} boxes be destroyed.</div>"
+        }
+      ],
+      "metrics": {
+        "correctField": "responseCorrect",
+        "rtField": "responseRtMs"
+      }
+    },
+    "showBlockIntro": false,
+    "endPages": [],
+    "insertions": []
+  },
+  "ui": {
+    "pageBackground": "linear-gradient(180deg, #DBDBDB 0%, #ADADAD 100%)",
+    "cardWidth": "600px",
+    "cardMinHeight": "400px",
+    "cardBorder": "1px solid #111111",
+    "cardBorderRadius": "12px",
+    "cardFontSize": "1.2rem",
+    "cardFontFamily": "system-ui, -apple-system, sans-serif",
+    "showHUD": true,
+    "hudFontFamily": "\"Segoe UI\", \"Helvetica Neue\", Arial, sans-serif",
+    "hudFontSize": 16,
+    "hudFontWeight": 600,
+    "hudPanel": true,
+    "hudPanelColor": "#0f172a",
+    "hudPanelAlpha": 0.38,
+    "showTimer": false,
+    "showRemainingBlocks": false,
+    "showDroppedBlocks": true,
+    "showRoundsRemaining": true,
+    "showPoints": true,
+    "showDRT": false,
+    "showHoldFeedback": true
+  },
+  "task": {
+    "implementation": "native_bricks",
+    "runner": "native",
+    "title": "Bricks Task (Henry1_test_sternberg_practice)",
+    "modules": {
+      "drt": {
+        "enabled": true,
+        "scope": "trial",
+        "key": " ",
+        "audio": {
+          "volume": 0
+        },
+        "stimMode": "border",
+        "border": {
+          "widthPx": 10,
+          "radiusPx": 0,
+          "target": "display"
+        },
+        "isiSampler": {
+          "type": "uniform",
+          "min": 3000,
+          "max": 5000
+        },
+        "transformPersistence": "session",
+        "responseDeadlineMs": 2500,
+        "parameterTransforms": [
+          {
+            "type": "wald_conjugate",
+            "t0Mode": "mix",
+            "maxWindowSize": 25,
+            "priorUpdate": {
+              "enabled": true,
+              "mode": "shift_means"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "character": {
+      "enable": true,
+      "sizePx": 80,
+      "offsetYPx": 4,
+      "frames": {
+        "idle": "assets/evander-bricks/sprite/idle",
+        "celebrate": "assets/evander-bricks/sprite/celebrate",
+        "sad": "assets/evander-bricks/sprite/sad"
+      },
+      "timing": {
+        "idleFrameIntervalMs": 2500,
+        "crossFadeMs": 20
+      }
+    },
+    "practiceFeedback": {
+      "bins": [
+        {
+          "max": -0.15,
+          "label": "Fast",
+          "color": "#D71B60"
+        },
+        {
+          "min": -0.15,
+          "max": 0.15,
+          "label": "Great!",
+          "color": "#05FE04"
+        },
+        {
+          "min": 0.15,
+          "label": "Slow",
+          "color": "#0072B2"
+        }
+      ],
+      "showHoldProgressCircle": false
+    },
+    "canvasWidth": 800,
+    "canvasHeight": 600,
+    "viewportPaddingPx": 24,
+    "backgroundColor": "#7f858a",
+    "beltColor": "#e5e7eb",
+    "beltHeight": 56,
+    "beltGap": 50,
+    "brickHeight": 36,
+    "brickCornerRadius": 3,
+    "beltTexture": {
+      "scrollSnapMode": "screen",
+      "scrollRenderMode": "auto"
+    },
+    "spotlight": {
+      "snapMode": "none",
+      "cornerRadiusPx": 10,
+      "ringWidthPx": 3,
+      "ringAlpha": 0.95
+    },
+    "brickTextureOverlay": {
+      "enable": true,
+      "alpha": 1,
+      "baseFillAlpha": 1,
+      "plankCount": 3,
+      "seamWidthPx": 1,
+      "grainCount": 4,
+      "nailRadiusPx": 1,
+      "insetPx": 2,
+      "styles": {
+        "present_orange_purple": {
+          "pattern": "gift_wrap",
+          "baseFillColor": "#FFA500",
+          "baseFillAlpha": 1,
+          "alpha": 1,
+          "ribbonColor": "#8c198c",
+          "ribbonAlpha": 1,
+          "ribbonWidthRatio": 0.2,
+          "ribbonInsetPx": 2
+        },
+        "present_green_blue": {
+          "pattern": "gift_wrap",
+          "baseFillColor": "#149214",
+          "baseFillAlpha": 1,
+          "alpha": 1,
+          "ribbonColor": "#15f4ee",
+          "ribbonAlpha": 1,
+          "ribbonWidthRatio": 0.2,
+          "ribbonInsetPx": 2
+        },
+        "present_blue_silver": {
+          "pattern": "gift_wrap",
+          "baseFillColor": "#2563eb",
+          "baseFillAlpha": 1,
+          "alpha": 1,
+          "ribbonColor": "#e2e8f0",
+          "ribbonAlpha": 1,
+          "ribbonWidthRatio": 0.2,
+          "ribbonInsetPx": 2
+        },
+        "present_purple_gold": {
+          "pattern": "gift_wrap",
+          "baseFillColor": "#7c3aed",
+          "baseFillAlpha": 1,
+          "alpha": 1,
+          "ribbonColor": "#ffc0cb",
+          "ribbonAlpha": 1,
+          "ribbonWidthRatio": 0.2,
+          "ribbonInsetPx": 2
+        },
+        "crate_light_brown": {
+          "pattern": "wood_planks",
+          "baseFillColor": "#c79a6a",
+          "baseFillAlpha": 1,
+          "alpha": 0.98,
+          "plankCount": 3,
+          "seamWidthPx": 1,
+          "grainCount": 5,
+          "nailRadiusPx": 1,
+          "insetPx": 2,
+          "seamColor": "#765636",
+          "highlightColor": "#f4e6d2"
+        },
+        "crate_mid_brown": {
+          "pattern": "wood_planks",
+          "baseFillColor": "#a77746",
+          "baseFillAlpha": 1,
+          "alpha": 0.96,
+          "plankCount": 3,
+          "seamWidthPx": 1,
+          "grainCount": 5,
+          "nailRadiusPx": 1,
+          "insetPx": 2,
+          "seamColor": "#5e4328",
+          "highlightColor": "#e7d1b3"
+        },
+        "crate_deep_brown": {
+          "pattern": "wood_planks",
+          "baseFillColor": "#6f4a2a",
+          "baseFillAlpha": 1,
+          "alpha": 0.94,
+          "plankCount": 3,
+          "seamWidthPx": 1,
+          "grainCount": 5,
+          "nailRadiusPx": 1,
+          "insetPx": 2,
+          "seamColor": "#3b2818",
+          "highlightColor": "#caa987"
+        },
+        "box_light_brown": {
+          "pattern": "cardboard_block",
+          "baseFillColor": "#b4936b",
+          "baseFillAlpha": 1,
+          "alpha": 0.96,
+          "plankCount": 0,
+          "insetPx": 2,
+          "speckleColor": "#7e5f40",
+          "speckleAlpha": 0.16,
+          "speckleCount": 25,
+          "tapeColor": "#d9c2a2",
+          "tapeAlpha": 0.5,
+          "tapeWidthRatio": 0.1,
+          "tapeOrientation": "horizontal"
+        },
+        "box_dark_brown": {
+          "pattern": "cardboard_block",
+          "baseFillColor": "#9A7651",
+          "baseFillAlpha": 1,
+          "alpha": 0.96,
+          "plankCount": 0,
+          "insetPx": 2,
+          "speckleColor": "#7e5f40",
+          "speckleAlpha": 0.16,
+          "speckleCount": 25,
+          "tapeColor": "#d9c2a2",
+          "tapeAlpha": 0.5,
+          "tapeWidthRatio": 0.1,
+          "tapeOrientation": "horizontal"
+        },
+        "box_med_brown": {
+          "pattern": "cardboard_block",
+          "baseFillColor": "#A7855E",
+          "baseFillAlpha": 1,
+          "alpha": 0.96,
+          "plankCount": 0,
+          "insetPx": 2,
+          "speckleColor": "#7e5f40",
+          "speckleAlpha": 0.16,
+          "speckleCount": 25,
+          "tapeColor": "#d9c2a2",
+          "tapeAlpha": 0.5,
+          "tapeWidthRatio": 0.1,
+          "tapeOrientation": "horizontal"
+        }
+      }
+    },
+    "dueDateMarker": {
+      "enable": true,
+      "color": "#111827",
+      "widthPx": 4,
+      "heightPx": 44,
+      "alpha": 0.95
+    },
+    "missAnimation": {
+      "mode": "disintegrate",
+      "durationMs": 240,
+      "markerFlashMs": 150,
+      "flashColor": "#ef4444",
+      "disintegrate": {
+        "shardCount": 30,
+        "durationMs": 230,
+        "gravityPxPerSec2": 620,
+        "speedMinPxPerSec": 120,
+        "speedMaxPxPerSec": 250,
+        "furnaceBias": 0.15
+      }
+    },
+    "clearAnimation": {
+      "enable": true,
+      "timeoutMs": 1000,
+      "risePx": 28,
+      "startOffsetYPx": 10,
+      "textColor": "#ffe082",
+      "textStrokeColor": "#4a2f05",
+      "textStrokeThickness": 4,
+      "textMinSizePx": 16,
+      "textMaxSizePx": 40,
+      "textSizeFactor": 0.62,
+      "coin": {
+        "enable": true,
+        "showInPointsAnimation": true,
+        "showInHud": true,
+        "sizePx": 20,
+        "gapPx": 6,
+        "ridgeCount": 18
+      }
+    },
+    "endFurnace": {
+      "enable": true,
+      "offsetX": 2
+    },
+    "preset": {
+      "mode": "fixed",
+      "id": "warehouse_concrete_checker"
+    },
+    "performance": {
+      "maxDevicePixelRatio": 2.5,
+      "antialias": true,
+      "imageRendering": "auto",
+      "pixelSnapBricks": false
+    }
+  },
+  "completion": {
+    "redirect": {
+      "enabled": false,
+      "completeUrlTemplate": "",
+      "incompleteUrlTemplate": ""
+    }
+  },
+  "testVariant": {
+    "sourceConfig": "bricks/Henry1",
+    "purpose": "Manual pre-launch testing only; keep in sync with configs/bricks/Henry1.json when Henry1 changes.",
+    "includedBlocks": [
+      "SternbergTaskPractice"
+    ]
+  },
+  "data": {
+    "filePrefix": "Henry1_test_sternberg_practice",
+    "localSave": true
+  }
+}

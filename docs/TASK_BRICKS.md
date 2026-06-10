@@ -274,3 +274,23 @@ Notes:
 - `--mode brick` exports a crop around the brick (default), `--mode scene` exports the full canvas scene.
 - Script starts `@experiments/web` dev server automatically if needed.
 - Output filenames are `<style>.<mode>.png` (for example `present.brick.png`).
+
+## Henry1 manual test configs
+
+Henry1 includes lightweight manual-testing config variants under `configs/bricks/Henry1_test_*.json`. These variants are copied slices of `configs/bricks/Henry1.json` intended for pre-launch checking without running the full experiment:
+
+- `Henry1_test_intro`: fullscreen/consent/intro flow plus a single Sternberg practice block.
+- `Henry1_test_sternberg_practice`: Sternberg practice block only.
+- `Henry1_test_box_practice`: first box-opening practice block only.
+- `Henry1_test_drt_practice`: DRT practice block only, shortened for manual testing.
+- `Henry1_test_combined_practice`: combined Bricks + DRT practice block only.
+- `Henry1_test_main_block1`: first main block, reduced to one trial.
+- `Henry1_test_finish_debrief`: final block summary/debrief path, reduced to one trial.
+
+Launch any variant directly with `?task=bricks&config=<variant>`, for example:
+
+```text
+http://localhost:5173/?task=bricks&config=Henry1_test_box_practice
+```
+
+Maintenance note: because these files intentionally duplicate Henry1 settings instead of adding new runtime slicing logic, any future change to `Henry1.json` should be reviewed against the relevant `Henry1_test_*.json` variants and copied over when applicable.
